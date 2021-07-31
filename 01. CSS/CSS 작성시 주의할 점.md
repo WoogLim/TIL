@@ -1,0 +1,11 @@
+```CSS
+padding: 6px 16px;
+border: 1px solid #446d88;
+background #58a linear-gradient(#77a0bb, #58a);
+border-radius: 4px;
+box-shadow: 0 1px 5px gray;
+color: white;
+text-shadow: 0 -1px 1px #335166;
+font-size: 20px;
+line-height: 30px;
+```
