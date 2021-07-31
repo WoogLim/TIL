@@ -145,9 +145,9 @@ a {
 ![image](https://user-images.githubusercontent.com/51357635/127744359-19cb987b-b542-4d60-9a44-3f9a4638981e.png)
 
 ---
-<br><br>
+<br>
 
-# 숫자가 아닌 자신의 눈을 믿어라!
+# 숫자가 아닌 시각을 믿자
 - 우리의 눈은 물체가 한가운데 가로로 위치한 경우 기하학적으로 가운데보다 약간 위에 있을 때 부정확하게 보일 때가 있다.
 - 아래 그림을 보면 동그라미 쪽이 작아 보이지만 왼쪽 사각형과 경계선은 같다. 때문에 글꼴 디자인에서는 O와 같이 둥근 문자는 네모진 문자보다 약간 크게 디자인한다.
 
@@ -160,6 +160,85 @@ a {
 ![image](https://user-images.githubusercontent.com/51357635/127744826-45b9e1b9-92d4-4739-81de-fdf37660d236.png)
 
 ---
-<br><br>
+<br>
 
-# 반응형 디자인
+# 반응형 웹
+- 반응형 웹은 다양한 해상도에 대응하기 위해 많은 미디어 쿼리를 사용한다.
+- 미래의 수정 사항은 어떤 해상도에 적용할 것인지, 또 잠재적으로는 어떤 수정이 있을지 파악한 후 반응형 작업을 해야한다.
+- 아래 불필요한 미디어 쿼리 방법을 살펴보고 작업시 참고하도록 하자.
+
+```TEXT
+[1] 고정된 폭(px)보다 백분율(%)을 사용한다. 이것이 어려운 경우 Viewport단위(vm, wh, wmin, wmax)를 사용해
+Viewport를 가로 또는 세로로 분할하여 보이도록 한다.
+
+[2] 큰 해상도에서 고정된 폭을 지정할 때 width가 아닌, max-width를 사용 하여 작은 해상도에서도 미디어 쿼리 없이 적용되도록 한다.
+
+[3] <img>, <object>, <video>, <iframe>과 같은 대체 요소를 위해 max-width를 100%로 설정하는 것을 잊지 말자.
+
+[4] 배경 이미지가 전체 공간을 커버해야 할 경우 background-size: cover 를 사용하면 내용의 크기에 상관없이 유지할 수 있다. 그러나 모바일 해상도 기준으로 설계 시 bandwidth의 한계가 있으므로 큰 크기의 이미지는 현명하지 않다.
+
+[5] 이미지(또는 다른 요소) 가로와 세로 그리드가 있을 때 세로 번호가 뷰포트의 너비로 생각하면 된다.
+Flexbox, inline-block과 같은 줄 인라인 요소가 이에 도움이 될 수 있다.
+
+[6] 다단의 텍스트 사용시 column-count 대신 column-width를 지정해 작은 해상도에서는 한 단만 나타나게 한다.
+```
+
+---
+<br>
+
+# 단축 속성을 현명하게 사용하자
+- 다음 키워드는 같은 키워드가 아니다.
+```CSS
+background: dodgerblue;
+```
+```CSS
+background-color: dodgerblue;
+```
+- background는 단축 속성으로, 배경이 dodgerblue인 반면
+- background-color는 일반 속성으로 background-image와 같이 그라디언트, 고양이 그림 등 어떤것으로도 사용할 수 있다. 
+- 이러한 일반 속성은 단축 속성과 조합해 사용할 경우 매우 유용하다.
+```CSS
+background: url(tr.png) no-repeat top right / 2em 2em,
+            url(br.png) no-repeat bottom right / 2em 2em,
+            url(bl.png) no-repeat bottom left / 2em 2em;
+```
+- 위 키워드에서는 bacgkround-size, background-repeat 값이 3번 반복된다.
+- 아래와 같이 일반속성으로 반복되는 값을 축약할 수 있다.
+```CSS
+background: url(tr.png) top right,
+            url(br.png) bottom right,
+            url(bl.png) bottom left;
+background-size: 2em 2em;
+background-repeat: no-repeat;
+```
+---
+<br>
+
+# 전처리기는 필수인가?
+- 최근 LESS(lesscss.org), Sass(sass-lang.com), Stylus(learnboost.github.io/stylus)와 같은 전처리는 변수, 믹스인(mixin)함수, 중첩, 색상 변환 등 CSS 작업에 편의를 제공한다.
+- 적절히 사용한다면 CSS 자체만 사용하는 것보다 대규모 프로젝트에서 코드를 좀 더 유연하게 관리할 수 있다. 허나 기존의 전신인 CSS보다 한계에 부딪히기도 할 것이다.
+- 위와 같은 전처리는 아래와 같은 문제점이 있다.
+```TEXT
+[1] CSS의 파일 크기와 복잡성에서 길을 잃을 수 있다. 축약되고 짧은 코드가 거대한 CSS로 컴파일된다.
+
+[2] 디버깅이 더 힘들어진다. IDE에서 CSS는 더는 처음 작성한 CSS가 아니게 되며 이러한 문제를 줄이고자 나온 소스맵(SourceMaps)에서는 생성된 CSS코드와 본래의 CSS코드를 매칭시켜 알게 해줌으로 디버깅을 지원한다.
+
+[3] 전처리로 개발 프로세스에 지연시간이 추가된다.
+
+[4] 모든 것을 추상화해 유지보수하기 힘들 수 있다. 협업자가 이러한 전처리 언어를 알지 못하면 협업에 제한이 생기고 사용법을 가르치는 시간도 필요할 수 있다.
+
+[5] 작은 것까지 모두 추상화 한다면 빈틈이 생긴다. 자체 버그가 있을 수도 있으며 원하는 결과가 나오지 않을 수 있다.
+
+[6] 무엇보다 CSS는 스크립트를 통해서도 변경될 수 있다는 점을 간과해서는 안 된다.
+```
+- 전처리기의 전신이 CSS라는 점을 간과하지말자.
+- 현재 CSS는 계속 진화하고 있다.
+```TEXT
+[1] CSS Custom Properties for Cascading Variables(w3.org/TR/css-variables-1)안에 변수와 비슷한 사용자 정의 키워드로 여러 전처리에서 지원하는 기능들을 대신할 수 있다.
+
+[2] CSS Value & Units Level 3에서 등장하는 calc()는 계산을 수행하는 강력한 기능이며 현재도 잘 지원되고 있다.
+
+[3] CSS Color Level 4(dev.w3.org/csswg/css-color)의 color()는 지원될 색상 변환에 관한 기능을 볼 수 있다.
+```
+- 물론 전처리에서 유지보수가 중요할 경우 전처리기를 사용해도 좋다. 선택할 것.
+- 이 책에서는 CSS, SCSS를 사용할 것이다.
