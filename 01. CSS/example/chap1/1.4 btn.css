@@ -1,3 +1,4 @@
+
 .btn1{
     padding: 6px 16px;
     border: 1px solid #446d88;
@@ -32,4 +33,76 @@
     text-shadow: 0 -1px 1px #335166;
     font-size: 125%;
     line-height: 1.5;
+}
+
+.btn4 {
+    padding: .3em .8em;
+    border: 1px solid #446d88;
+    background: #58a linear-gradient(#77a0bb, #58a);
+    border-radius: .2em;
+    box-shadow: 0 0.05em .25em gray;
+    color: white;
+    text-shadow: 0 0.05em 0.05em #335166;
+    font-size: 125%;
+    line-height: 30px;
+}
+
+.btn5 {
+    padding: .3em .8em;
+    border: 1px solid #446d88;
+    background-color: #6b0;
+    border-radius: .2em;
+    box-shadow: 0 0.05em .25em gray;
+    color:white;
+    text-shadow: 0 -.05em .05em rgba(0, 0, 0, 5);
+    font-size:125%;
+    line-height: 1.5;
+}
+
+.btn6 {
+    padding: .3em .8em;
+    border: 1px solid #446d88;
+    background-color: #c00;
+    border-radius: .2em;
+    box-shadow: 0 0.05em .25em gray;
+    color: white;
+    text-shadow: 0 -.05em .05em rgba(0, 0, 0, 5);
+    font-size: 125%;
+    line-height: 1.5;
+}
+
+.span1{
+    display: block;
+    font-size: 1em;
+    color: dodgerblue;
+    width: 6.5em;
+    font-weight: bold;
+}
+
+hr{
+    height:.1em;
+    background: currentColor;
+}
+
+.callout {
+    margin-top: .6em;
+    font-size: .9em;
+    position: relative;
+    background: pink;
+    max-width: 20em;
+    padding:.6em;
+    border-radius: .3em;
+}
+
+.callout::before {
+    content: "";
+    position: absolute;
+    top: -.3em;
+    left: .8em;
+    padding: .35em;
+    background: inherit;
+    border: inherit;
+    border-right: 0;
+    border-bottom: 0;
+    transform: rotate(45deg);
 }
