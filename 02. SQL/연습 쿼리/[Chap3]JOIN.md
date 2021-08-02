@@ -293,3 +293,98 @@ SELECT  T1.CUS_ID, T1.CUS_NM
   : 참조 데이터 집합에 CUS_0011은 존재하므로 정상적으로 조인이 성사
   (+)는 달라붙는쪽이며 달라붙는값이 없다면 NULL이라 생각하면 된다.
 ```
+
+### 1. OUTER-JOIN의 필터 조건
+
+- OUTER 조인 시 '참조 데이터 집합'에도 '(+)'표시를 반드시 해주어야 한다.
+```SQL
+-- 조건에 (+)가 없는 경우
+SELECT  T1.CUS_ID, T1.CUS_NM
+        ,T2.CUS_ID, T2.ITM_ID
+        ,T2.EVL_LST_NO, T2.EVL_DT
+  FROM  M_CUS T1
+        ,T_ITM_EVL T2
+ WHERE  T1.CUS_ID IN('CUS_0073')
+   AND  T1.CUS_ID = T2.CUS_ID(+)
+   AND  T2.EVL_DT >= TO_DATE('20170201','YYYYMMDD')
+   AND  T2.EVL_DT <  TO_DATE('20170301','YYYYMMDD');
+```
+![image](https://user-images.githubusercontent.com/51357635/127873339-6b13694f-d188-4d6d-b29e-c987392cf78a.png)
+
+```SQL
+-- 조건에 (+)가 있는 경우
+SELECT  T1.CUS_ID, T1.CUS_NM
+        ,T2.CUS_ID, T2.ITM_ID
+        ,T2.EVL_LST_NO, T2.EVL_DT
+  FROM  M_CUS T1
+        ,T_ITM_EVL T2
+ WHERE  T1.CUS_ID IN('CUS_0073')
+   AND  T1.CUS_ID = T2.CUS_ID(+)
+   AND  T2.EVL_DT(+) >= TO_DATE('20170201','YYYYMMDD')
+   AND  T2.EVL_DT(+) <  TO_DATE('20170301','YYYYMMDD');
+```
+![image](https://user-images.githubusercontent.com/51357635/127873472-35efbaed-872a-47cc-9cc6-1ea74e47aa65.png)
+
+```TEXT
+1. 참조 쪽 필터 조건에(+)사용한 경우 : OUTER조인 전 필터 조건이 사용된다.
+2. 참조 쪽 필터 조건에(+)미사용 : OUTER조인 후, 조인 결과에 필터 조건이 사용된다.
+즉, OUTER조인이 이루어지면 참조 데이터 집합의 EVL_DT는 NULL값이 되므로 필터 조건을 적용하면 데이터가 없다. 결과적으로 INNER조인과 같아진다.
+```
+
+### 2. 실행이 불가능한 OUTER조인
+
+- OUTER조인에서 '(+)'표시가 된 참조 데이터 집합은 두 개 이상의 기준 데이터 집합을 동시에 가질 수 없다.
+
+```SQL
+-- 불가능한 OUTER 조인
+SELECT  T1.CUS_ID, T2_ITM_ID, T1.ORD_DT, T3.ITM_ID, T3.EVL_PT
+  FROM  T_ORD T1
+        , T_ORD_DET T2
+        , T_ITM_EVL T3
+ WHERE  T1.ORD_SEQ = T2.ORD_SEQ
+   AND  T1.CUS_ID = 'CUS_0002'
+   AND  T1.ORD_DT >= TO_DATE('20170122','YYYYMMDD')
+   AND  T1.ORD_DT < TO_DATE('20170123','YYYYMMDD')
+   AND  T3.CUS_ID(+) = T1.CUS_ID
+   AND  T3.ITM_ID(+) = T2.ITM_ID;
+```
+OUTER 조인에서 참조 데이터 집합은 기준 데이터 집합을 두 개 가질 수 없다. 
+이를 해결하기 위해선 인라인-뷰를 이용해야 한다.
+
+```SQL
+-- 인라인-뷰를 사용한 OUTER 조인
+SELECT  T0.CUS_ID, T0.ITM_ID, T0.ORD_DT
+        ,T3.ITM_ID, T3.EVL_PT
+  FROM  (
+        SELECT  T1.CUS_ID, T2.ITM_ID, T1.ORD_DT
+          FROM  T_ORD T1
+                ,T_ORD_DET T2
+         WHERE  T1.ORD_SEQ = T2.ORD_SEQ
+           AND  T1.CUS_ID = 'CUS_0002'
+           AND  T1.ORD_DT >= TO_DATE('20170122','YYYYMMDD')
+           AND  T1.ORD_DT < TO_DATE('20170123','YYYYMMDD')
+        ) T0
+        , T_ITM_EVL T3
+ WHERE  T3.CUS_ID(+) = T0.CUS_ID
+   AND  T3.ITM_ID(+) = T0.ITM_ID
+ ORDER BY T0.CUS_ID;
+```
+![image](https://user-images.githubusercontent.com/51357635/127875626-8f1dee80-9a03-4b9a-be6b-f688731dc582.png)
+
+```SQL
+-- ANSI 표준 SLQ
+SELECT  T1.CUS_ID, T2.ITM_ID, T1.ORD_DT
+        ,T3.ITM_ID, T3.EVL_PT
+  FROM  T_ORD T1
+        INNER JOIN T_ORD_DET T2
+          ON(T1.ORD_SEQ = T2.ORD_SEQ
+            AND T1.CUS_ID = 'CUS_0002'
+            AND T1.ORD_DT >= TO_DATE('20170122','YYYYMMDD')
+            AND T1.ORD_DT < TO_DATE('20170123','YYYYMMDD'))
+        LEFT OUTER JOIN T_ITM_EVL T3
+          ON(T3.CUS_ID = T1.CUS_ID
+            AND T3.ITM_ID = T2.ITM_ID);
+```
+대부분 DBMS가 ANSI표준을 이용하기 때문에 ANSI표준을 써도 무방하다.
+
+### 3. OUTER-JOIN이 포함된 여러 테이블의 조인
