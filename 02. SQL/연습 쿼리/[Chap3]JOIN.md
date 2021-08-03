@@ -388,3 +388,83 @@ SELECT  T1.CUS_ID, T2.ITM_ID, T1.ORD_DT
 대부분 DBMS가 ANSI표준을 이용하기 때문에 ANSI표준을 써도 무방하다.
 
 ### 3. OUTER-JOIN이 포함된 여러 테이블의 조인
+```SQL
+SELECT  T1.CUS_ID, T2.ORD_SEQ, T2.ORD_DT, T3.ORD_SEQ, T3.ITM_ID
+  FROM  M_CUS T1
+        ,T_ORD T2
+        ,T_ORD_DET T3
+ WHERE  T1.CUS_ID = 'CUS_0073'
+   AND  T1.CUS_ID = T2.CUS_ID(+)
+   AND  T2.ORD_DT(+) >= TO_DATE('20170122','YYYYMMDD')
+   AND  T2.ORD_DT(+) < TO_DATE('20170123','YYYYMMDD')
+   AND  T3.ORD_SEQ = T2.ORD_SEQ;
+```
+위 쿼리의 결과는 없다.
+
+![image](https://user-images.githubusercontent.com/51357635/128044857-ed606614-0bcc-472b-9294-7dd930c87bf2.png)
+
+먼저 6번 라인의 OUTER조인의 ORD_SEQ가 NULL값이기 때문이다.
+NULL 값은 비교할 수 없으며 마지막 라인의 이너 조인으로 인해 성공하는 데이터가 없다.
+조인 결과가 나오게 하려면 마지막 라인을 "T3.ORD_SEQ(+) = T2.ORD_ESQ"와 같이 OUTER조인으로 변경해야한다.
+
+### 4. OUTER-JOIN의 응용
+
+- OUTER 조인은 조인에 성공하지 못하더라도 기준 데이터 집합은 무조건 조회되는 특성이 있으며 참조 데이터는 NULL 값이라도 표현해준다.
+- 분석 리포트에서 실적이 없는 마스터도 결과에 포함시킬때 응용한다.
+
+```SQL
+-- 고객ID별 주문건수, 주문이 없는 고객도 나오도록 처리
+SELECT  T1.CUS_ID
+        ,COUNT(*) ORD_CNT_1
+        ,COUNT(T2.ORD_SEQ) ORD_CNT_2
+  FROM  M_CUS T1
+        ,T_ORD T2
+ WHERE  T1.CUS_ID = T2.CUS_ID(+)
+   AND  T2.ORD_DT(+) >= TO_DATE('20170101','YYYYMMDD')
+   AND  T2.ORD_DT(+) < TO_DATE('20170201','YYYYMMDD')
+ GROUP BY T1.CUS_ID
+ ORDER BY COUNT(*), T1.CUS_ID;
+```
+
+![image](https://user-images.githubusercontent.com/51357635/128046086-269eb33a-b7e1-43da-97e1-30b3d91c781a.png)(결과가 많아 일부 생략)
+
+OUTER조인과 집계함수 이용 시 주의가 필요하다. COUNT 대상에 따라 결과가 다르기 때문이다.
+ORD_CNT_1은 NULL을 포함한 결과의 갯수 ORD_CNT_2는 주문 건수 이다.
+
+```SQL
+-- 아이템 ID별 주문수량
+-- 'PC, ELEC' 아이템 유형의 아이템별 주문수량 조회(주문이 없더라도 결과가 0으로 나와야 한다.)
+SELECT  T1.ITM_ID, T1.ITM_NM, NVL(T2.ORD_QTY,0)
+  FROM  M_ITM T1
+        ,(  SELECT  B.ITM_ID, SUM(B.ORD_QTY) ORD_QTY
+              FROM  T_ORD A
+                    ,T_ORD_DET B
+             WHERE  A.ORD_SEQ = B.ORD_SEQ
+               AND  A.ORD_ST = 'COMP' --주문상태 = 완료
+               AND  A.ORD_DT >= TO_DATE('20170101','YYYYMMDD')
+               AND  A.ORD_DT < TO_DATE('20170201','YYYYMMDD')
+             GROUP BY B.ITM_ID ) T2
+ WHERE  T1.ITM_ID = T2.ITM_ID(+)
+   AND  T1.ITM_TP IN ('PC','ELEC')
+ ORDER BY T1.ITM_TP, T1.ITM_ID;
+```
+
+![image](https://user-images.githubusercontent.com/51357635/128048020-8f462d76-c9f6-49b6-b893-9cf99088bbf6.png)
+
+인라인 뷰를 이용해 실적 데이터를 M_ITM 테이블의 ITM_ID로 GROUP BY 한 후 조인하고 있다.
+적절히 가독성 좋은 SQL은 이렇듯 유지보수에 도움을 준다.
+
+- 마무리. OUTER 조인의 특징
+```TEXT
+1. OUTER 조인은 기준 데이터 집합과 참조 데이터 집합으로서 조인이 이루어진다.
+2. 참조 데이터 집합은 조인 조건에 (+)가 표시된 쪽이며 반대쪽은 기준 데이터 집합이 된다.
+3. 기준 데이터 집합은 조인 조건을 만족하지 않아도 필터 조건만 만족하면 결과가 나온다.
+(이 때, 참조 데이터 집합의 결과는 NULL 값으로 채워진다.)
+4. 참조 데이터 집합의 필터 조건에 (+)를 표시하면 OUTER조인 전 필터가 된다.
+5. 참조 데이터 집합의 필터 조건에 (+)를 표시하지 않으면 OUTER조인 후 필터가 된다.
+6. 일반적으로 참조 데이터 집합의 필터 조건에는 (+)를 표시한다.
+7. 참조 데이터 집합이 다른 집합과 조인될 때는 기준 집합으로서 OUTER조인을 해야 한다.
+```
+
+---
+### CATESIAN-JOIN
