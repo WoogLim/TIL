@@ -8,7 +8,7 @@ FROM   (    SELECT 'A' COL_1 FROM DUAL UNION ALL
             SELECT 'D' COL_1 FROM DUAL ) T2
 WHERE   T1.COL_1 = T2.COL_1;
 
--- (2) INNER-JOINÀÇ Ã³¸® °úÁ¤
+-- (2) INNER-JOINì˜ ì²˜ë¦¬ ê³¼ì •
 SELECT  T1.CUS_ID, T1.CUS_GD, T2.ORD_SEQ, T2.CUS_ID, T2.ORD_DT
 FROM    M_CUS T1
         ,T_ORD T2
@@ -18,8 +18,8 @@ AND     T2.ORD_DT >= TO_DATE('20170101','YYYYMMDD')
 AND     T2.ORD_DT <  TO_DATE('20170201','YYYYMMDD')
 AND     T1.CUS_ID = 'CUS_0003';
 
--- Àß¸øµÈ Äõ¸®ÀÇ ¿¹
--- Æ¯Á¤ °í°´ÀÇ 17³â 3¿ùÀÇ ¾ÆÀÌÅÛÆò°¡(T_ITM_EVL)±â·Ï°ú 3¿ù ÁÖ¹®(T_ORD)¿¡ ´ëÇØ, °í°´ ID, °í°´¸íº° ¾ÆÀÌÅÛÆò°¡ °Ç¼ö, ÁÖ¹®°Ç¼ö¸¦ Ãâ·Â
+-- ìž˜ëª»ëœ ì¿¼ë¦¬ì˜ ì˜ˆ
+-- íŠ¹ì • ê³ ê°ì˜ 17ë…„ 3ì›”ì˜ ì•„ì´í…œí‰ê°€(T_ITM_EVL)ê¸°ë¡ê³¼ 3ì›” ì£¼ë¬¸(T_ORD)ì— ëŒ€í•´, ê³ ê° ID, ê³ ê°ëª…ë³„ ì•„ì´í…œí‰ê°€ ê±´ìˆ˜, ì£¼ë¬¸ê±´ìˆ˜ë¥¼ ì¶œë ¥
 SELECT  T1.CUS_ID, T1.CUS_NM
         ,COUNT( T2.ITM_ID||'-'||TO_CHAR(T2.EVL_LST_NO)) EVAL_CNT
         ,COUNT( T3.ORD_SEQ) ORD_CNT
@@ -62,7 +62,7 @@ SELECT  T1.CUS_ID
     AND  T1.CUS_ID = T3.CUS_ID
     AND  T1.CUS_ID = 'CUS_0023';
     
--- 1. CASE¸¦ ÀÌ¿ëÇØ °¡°ÝÀ¯Çü(ORD_AMT_TP)º°·Î ÁÖ¹® °Ç¼ö¸¦ Ä«¿îÆ®
+-- 1. CASEë¥¼ ì´ìš©í•´ ê°€ê²©ìœ í˜•(ORD_AMT_TP)ë³„ë¡œ ì£¼ë¬¸ ê±´ìˆ˜ë¥¼ ì¹´ìš´íŠ¸
 SELECT  T1.ORD_ST
         ,CASE WHEN T1.ORD_AMT >= 5000 THEN 'HIGH ORDER'
               WHEN T1.ORD_AMT >= 3000 THEN 'MIDDLE ORDER'
@@ -77,7 +77,7 @@ GROUP BY T1.ORD_ST
               END
 ORDER BY 1, 2;
 
--- ÁÖ¹®±Ý¾×À¯Çü Å×ÀÌºí »ý¼º
+-- ì£¼ë¬¸ê¸ˆì•¡ìœ í˜• í…Œì´ë¸” ìƒì„±
 CREATE TABLE M_ORD_AMT_TP
 (
     ORD_AMT_TP VARCHAR2(40) NOT NULL,
@@ -90,7 +90,7 @@ CREATE UNIQUE INDEX PK_M_ORD_AMT_TP ON M_ORD_AMT_TP(ORD_AMT_TP);
 ALTER TABLE M_ORD_AMT_TP
         ADD CONSTRAINT PK_M_ORD_AMT_TP PRIMARY KEY(ORD_AMT_TP) USING INDEX;
 
--- Å×½ºÆ® µ¥ÀÌÅÍ »ý¼º.
+-- í…ŒìŠ¤íŠ¸ ë°ì´í„° ìƒì„±.
 INSERT INTO M_ORD_AMT_TP(ORD_AMT_TP, FR_AMT, TO_AMT)
 SELECT 'Low Order', 0, 3000 FROM DUAL UNION ALL
 SELECT 'Middle Order', 3000, 5000 FROM DUAL UNION ALL
@@ -98,7 +98,7 @@ SELECT 'High Order', 5000, 999999999999 FROM DUAL;
 
 COMMIT;
 
--- RANGE-JOINÀ» ÀÌ¿ëÇØ °¡°ÝÀ¯Çü(ORD_AMT_TP)º°·Î ÁÖ¹® °Ç¼ö¸¦ Ä«¿îÆ®
+-- RANGE-JOINì„ ì´ìš©í•´ ê°€ê²©ìœ í˜•(ORD_AMT_TP)ë³„ë¡œ ì£¼ë¬¸ ê±´ìˆ˜ë¥¼ ì¹´ìš´íŠ¸
 SELECT  T1.ORD_ST, T2.ORD_AMT_TP, COUNT(*) ORD_CNT
   FROM  T_ORD T1
         , M_ORD_AMT_TP T2
@@ -107,7 +107,7 @@ SELECT  T1.ORD_ST, T2.ORD_AMT_TP, COUNT(*) ORD_CNT
  GROUP BY T1.ORD_ST, T2.ORD_AMT_TP
  ORDER BY 1, 2;
  
--- OUTER Á¶ÀÎ, ÇÑ ¸íÀº Æò°¡°¡ ÀÖÁö¸¸ ÇÑ ¸íÀº Æò°¡°¡ ¾øÀ½.
+-- OUTER ì¡°ì¸, í•œ ëª…ì€ í‰ê°€ê°€ ìžˆì§€ë§Œ í•œ ëª…ì€ í‰ê°€ê°€ ì—†ìŒ.
 SELECT  T1.CUS_ID, T1.CUS_NM
         ,T2.CUS_ID, T2.ITM_ID, T2.EVL_LST_NO
   FROM  M_CUS T1
@@ -116,4 +116,106 @@ SELECT  T1.CUS_ID, T1.CUS_NM
    AND  T1.CUS_ID = T2.CUS_ID(+)
  ORDER BY T1.CUS_ID;
  
+-- ì¡°ê±´ì— (+)ê°€ ì—†ëŠ” ê²½ìš°
+SELECT  T1.CUS_ID, T1.CUS_NM
+        ,T2.CUS_ID, T2.ITM_ID
+        ,T2.EVL_LST_NO, T2.EVL_DT
+  FROM  M_CUS T1
+        ,T_ITM_EVL T2
+ WHERE  T1.CUS_ID IN('CUS_0073')
+   AND  T1.CUS_ID = T2.CUS_ID(+)
+   AND  T2.EVL_DT >= TO_DATE('20170201','YYYYMMDD')
+   AND  T2.EVL_DT <  TO_DATE('20170301','YYYYMMDD');
+   
+-- ì¡°ê±´ì— (+)ê°€ ìžˆëŠ” ê²½ìš°
+SELECT  T1.CUS_ID, T1.CUS_NM
+        ,T2.CUS_ID, T2.ITM_ID
+        ,T2.EVL_LST_NO, T2.EVL_DT
+  FROM  M_CUS T1
+        ,T_ITM_EVL T2
+ WHERE  T1.CUS_ID IN('CUS_0073')
+   AND  T1.CUS_ID = T2.CUS_ID(+)
+   AND  T2.EVL_DT(+) >= TO_DATE('20170201','YYYYMMDD')
+   AND  T2.EVL_DT(+) <  TO_DATE('20170301','YYYYMMDD');
+   
+-- ë¶ˆê°€ëŠ¥í•œ OUTER ì¡°ì¸
+SELECT  T1.CUS_ID, T2_ITM_ID, T1.ORD_DT, T3.ITM_ID, T3.EVL_PT
+  FROM  T_ORD T1
+        , T_ORD_DET T2
+        , T_ITM_EVL T3
+ WHERE  T1.ORD_SEQ = T2.ORD_SEQ
+   AND  T1.CUS_ID = 'CUS_0002'
+   AND  T1.ORD_DT >= TO_DATE('20170122','YYYYMMDD')
+   AND  T1.ORD_DT < TO_DATE('20170123','YYYYMMDD')
+   AND  T3.CUS_ID(+) = T1.CUS_ID
+   AND  T3.ITM_ID(+) = T2.ITM_ID;
+   
+-- ì¸ë¼ì¸-ë·°ë¥¼ ì‚¬ìš©í•œ OUTER ì¡°ì¸
+SELECT  T0.CUS_ID, T0.ITM_ID, T0.ORD_DT
+        ,T3.ITM_ID, T3.EVL_PT
+  FROM  (
+        SELECT  T1.CUS_ID, T2.ITM_ID, T1.ORD_DT
+          FROM  T_ORD T1
+                ,T_ORD_DET T2
+         WHERE  T1.ORD_SEQ = T2.ORD_SEQ
+           AND  T1.CUS_ID = 'CUS_0002'
+           AND  T1.ORD_DT >= TO_DATE('20170122','YYYYMMDD')
+           AND  T1.ORD_DT < TO_DATE('20170123','YYYYMMDD')
+        ) T0
+        , T_ITM_EVL T3
+ WHERE  T3.CUS_ID(+) = T0.CUS_ID
+   AND  T3.ITM_ID(+) = T0.ITM_ID
+ ORDER BY T0.CUS_ID;
  
+ 
+SELECT  T1.CUS_ID, T2.ITM_ID, T1.ORD_DT
+        ,T3.ITM_ID, T3.EVL_PT
+  FROM  T_ORD T1
+        INNER JOIN T_ORD_DET T2
+          ON(T1.ORD_SEQ = T2.ORD_SEQ
+            AND T1.CUS_ID = 'CUS_0002'
+            AND T1.ORD_DT >= TO_DATE('20170122','YYYYMMDD')
+            AND T1.ORD_DT < TO_DATE('20170123','YYYYMMDD'))
+        LEFT OUTER JOIN T_ITM_EVL T3
+          ON(T3.CUS_ID = T1.CUS_ID
+            AND T3.ITM_ID = T2.ITM_ID);
+            
+-- OUTERì¡°ì¸ì´ í¬í•¨ëœ ì—¬ëŸ¬ í…Œì´ë¸”ì˜ ì¡°ì¸
+-- OUTERì¡°ì¸ê³¼ INNERì¡°ì¸ì„ ë™ì‹œì— ì‚¬ìš©í•˜ëŠ” SQL
+SELECT  T1.CUS_ID, T2.ORD_SEQ, T2.ORD_DT
+  FROM  M_CUS T1
+        ,T_ORD T2
+        ,T_ORD_DET T3
+ WHERE  T1.CUS_ID = 'CUS_0073'
+   AND  T1.CUS_ID = T2.CUS_ID(+)
+   AND  T2.ORD_DT(+) >= TO_DATE('20170122','YYYYMMDD')
+   AND  T2.ORD_DT(+) < TO_DATE('20170123','YYYYMMDD')
+   AND  T3.ORD_SEQ = T2.ORD_SEQ;
+   
+-- ê³ ê°IDë³„ ì£¼ë¬¸ê±´ìˆ˜, ì£¼ë¬¸ì´ ì—†ëŠ” ê³ ê°ë„ ë‚˜ì˜¤ë„ë¡ ì²˜ë¦¬
+SELECT  T1.CUS_ID
+        ,COUNT(*) ORD_CNT_1
+        ,COUNT(T2.ORD_SEQ) ORD_CNT_2
+  FROM  M_CUS T1
+        ,T_ORD T2
+ WHERE  T1.CUS_ID = T2.CUS_ID(+)
+   AND  T2.ORD_DT(+) >= TO_DATE('20170101','YYYYMMDD')
+   AND  T2.ORD_DT(+) < TO_DATE('20170201','YYYYMMDD')
+ GROUP BY T1.CUS_ID
+ ORDER BY COUNT(*), T1.CUS_ID;
+ 
+-- ì•„ì´í…œ IDë³„ ì£¼ë¬¸ìˆ˜ëŸ‰
+-- 'PC, ELEC' ì•„ì´í…œ ìœ í˜•ì˜ ì•„ì´í…œë³„ ì£¼ë¬¸ìˆ˜ëŸ‰ ì¡°íšŒ(ì£¼ë¬¸ì´ ì—†ë”ë¼ë„ ê²°ê³¼ê°€ 0ìœ¼ë¡œ ë‚˜ì™€ì•¼ í•œë‹¤.)
+SELECT  T1.ITM_ID, T1.ITM_NM, NVL(T2.ORD_QTY,0)
+  FROM  M_ITM T1
+        ,(  SELECT  B.ITM_ID, SUM(B.ORD_QTY) ORD_QTY
+              FROM  T_ORD A
+                    ,T_ORD_DET B
+             WHERE  A.ORD_SEQ = B.ORD_SEQ
+               AND  A.ORD_ST = 'COMP' --ì£¼ë¬¸ìƒíƒœ = ì™„ë£Œ
+               AND  A.ORD_DT >= TO_DATE('20170101','YYYYMMDD')
+               AND  A.ORD_DT < TO_DATE('20170201','YYYYMMDD')
+             GROUP BY B.ITM_ID ) T2
+ WHERE  T1.ITM_ID = T2.ITM_ID(+)
+   AND  T1.ITM_TP IN ('PC','ELEC')
+ ORDER BY T1.ITM_TP, T1.ITM_ID;
