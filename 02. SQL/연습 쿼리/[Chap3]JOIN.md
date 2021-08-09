@@ -468,3 +468,66 @@ SELECT  T1.ITM_ID, T1.ITM_NM, NVL(T2.ORD_QTY,0)
 
 ---
 ### CATESIAN-JOIN
+
+### 1. CATESIAN-JOIN 이해하기
+- 일명 '묻지마 조인'이라 불린다.
+- FROM절에 테이블 A와 B가 있는 경우 A에는 2건, B에는 4건이 있을 때, 조인 조건을 주지 않는 다면 카테시안-조인이 된다. 결국 8건의 데이터가 만들어진다.
+
+```SQL
+-- 고객등급(M_CUS, CUS_GD)과 아이템 유형(M_ITM, ITM_TP)의 조합 가능한 모든 데이터
+SELECT  T1.CUS_GD, T2.ITM_TP
+  FROM  (SELECT DISTINCT A.CUS_GD FROM M_CUS A) T1
+        ,(SELECT DISTINCT A.ITM_TP FROM M_ITM A) T2
+ ORDER BY T1.CUS_GD, T2.ITM_TP;
+```
+![image](https://user-images.githubusercontent.com/51357635/128734653-74f9aea0-657c-47d9-a498-2e5d748f87f4.png)
+
+```TEXT
+1. CUS_GD의 종류를 가져온 데이터 집합
+2. ITM_TP의 종류를 가져온 데이터 집합
+3. 1번과 2번의 조인 조건이 없다. CATESIAN조인을 수행
+- 1번 집합의 CUS_GD A는 2번 집합의 4건과 조인되어 4건이 만들어진다.
+- 1번 집합의 CUS_GD B도 2번 집합의 4건과 조인되어 4건이 만들어진다.
+- 최종 8건의 결과 건수가 만들어진다.
+```
+
+### 2. CATESIAN-JOIN의 위험성
+- 카테시안-조인은 매우 위험한 조인이다. 시스템 장애를 유발할 수 있기 때문이다.
+- 조인 조건의 누락이 일어나거나 별칭에 실수가 발생 하면 이 문제를 야기할 수 있다. 때문에 SQL 실행 전 조인 조건을 한 번 더 확인해야 한다.
+  
+```SQL
+-- 조인 조건의 누락
+SELECT  COUNT(*)
+  FROM  T_ORD T1
+        ,T_ORD_DET T2;
+```
+```SQL
+-- 조인 조건의 별칭 실수
+SELECT  COUNT(8)
+  FROM  T_ORD T1
+        ,T_ORD_DET T2
+ WHERE  T1.ORD_SEQ = T1.ORD_SEQ
+```
+
+### 3. 분석마스터 만들기
+- 카테시안-조인은 분석 마스터를 만들 때 유용하다.
+
+```SQL
+-- 특정 고객 두 명의 2월, 3월, 4월별 주문 건수
+SELECT  T1.CUS_ID, T1.CUS_NM, T2.ORD_YM, T2.ORD_CNT
+  FROM  M_CUS T1
+        ,(  SELECT  A.CUS_ID
+                    ,TO_CHAR(A.ORD_DT,'YYYYMM') ORD_YM
+                    ,COUNT(*) ORD_CNT
+              FROM  T_ORD A
+             WHERE  A.CUS_ID IN ('CUS_0003','CUS_0004')
+               AND  A.ORD_DT >= TO_DATE('20170201','YYYYMMDD')
+               AND  A.ORD_DT < TO_DATE('20170501','YYYYMMDD')
+             GROUP BY   A.CUS_ID
+                        ,TO_CHAR(A.ORD_DT,'YYYYMM')
+        ) T2
+ WHERE  T1.CUS_ID IN ('CUS_0003','CUS_0004')
+   AND  T1.CUS_ID = T2.CUS_ID(+)
+ ORDER BY  T1.CUS_ID, T2.ORD_YM;
+```
+![image](https://user-images.githubusercontent.com/51357635/128737470-a5b4a806-bd38-4d5a-ba45-d0c86b9fed2a.png)
