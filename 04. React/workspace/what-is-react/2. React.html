@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="witdh=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>example</title>
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script
+      crossorigin
+      src="https://unpkg.com/react@17/umd/react.development.js"
+    ></script>
+    <script
+      crossorigin
+      src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"
+    ></script>
+    <script type="text/javascript">
+      console.log(React);
+      console.log(ReactDOM);
+
+      //createElemment 의 인자
+      // React.createElement(
+      //     type, // 태그 이름 문자열 | 리액트 컴포넌트 | React.Fragment
+      //     [props] // 리액트 컴포넌트에 넣어주는 데이터 객체
+      //     [... children] // 자식으로 넣어주는 요소들
+      // );
+
+      // 1. 태그 이름 문자열 type
+      // <h1>type 이 "태그 이름 문자열" 입니다<h1>
+      // ReactDOM.render(
+      //     // 태그 타입은 h1 데이터 객체는 넣지 않으며 자식으로 3번째 텍스트를 넣는다.
+      //     React.createment("h1", null, `type 이 "태그 이름 문자열" 입니다.`),
+      //     document.querySelector("#root") // 위의 실제 root DOM에 넣어 VIEW로 렌더링 된다.
+      // );
+
+      //2. 리액트 컴포넌트 type
+      // const Component = () => {
+      //     return React.createElement('p', null, `type 이 "React 컴포넌트" 입니다.`)
+      // }
+
+      // <Component></Component> => <Component /> => <p>`type 이 "React 컴포넌트" 입니다.`</p>
+      // ReactDOM.render(
+      //     React.createElement(Component, null, null),
+      //     document.querySelector("#root") //root에 렌더
+      // );
+
+      // 3. React.Fragment
+      // 태그 부분 없이 자식들이 root내 생성된다.
+      // ReactDOM.render(
+      //     React.createElement(
+      //         React.Fragment,
+      //         null,
+      //         `type 이 "React Fragment" 입니다.`,
+      //         `type 이 "React Fragment" 입니다.`,
+      //         `type 이 "React Fragment" 입니다.`
+      //     ),
+      //     document.querySelector("#root")
+      // )
+
+      // 4. 복합한 리액트 엘리먼트 모임
+      // <h1>안녕하세요</h1>
+
+      //  <div>
+      //     <div>
+      //         <h1>주제</h1>
+      //         <ul>
+      //             <li>React</li>
+      //             <li>React</li>
+      //         </ul>
+      //     </div>
+      // </div>
+
+      // 위와 같은 구조로 DOM을 생성한다면 번거로울 것이다.
+      //   ReactDOM.render(
+      //     React.createElement(
+      //       "div",
+      //       null,
+      //       React.createElement(
+      //         "div",
+      //         null,
+      //         React.createElement("h1", null, "주제"),
+      //         React.createElement(
+      //           "ul",
+      //           null,
+      //           React.createElement("li", null, "React"),
+      //           React.createElement("li", null, "Vue")
+      //         )
+      //       )
+      //     ),
+      //     document.querySelector("#root")
+      //   );
+    </script>
+  </body>
+</html>

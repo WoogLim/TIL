@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="witdh=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>example</title>
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        border: 0;
+      }
+
+      #root p {
+        color: white;
+        font-size: 20px;
+        background-color: green;
+        text-align: center;
+        width: 200px;
+      }
+
+      #btn_plus {
+        background-color: red;
+        border: 2px solid #000000;
+        font-size: 15px;
+        width: 200px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <button id="btn_plus">+</button>
+
+    <script
+      crossorigin
+      src="https://unpkg.com/react@17/umd/react.development.js"
+    ></script>
+    <script
+      crossorigin
+      src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"
+    ></script>
+    <script type="text/javascript">
+      console.log(React);
+      console.log(ReactDOM);
+
+      // chap 1.
+      // const root = document.querySelector('#root');
+      // const btn_plus = document.querySelector('#btn_plus');
+
+      // let i = 0;
+
+      // root.innerHTML = '<p>init : 0<p>';
+      // btn_plus.addEventListener('click', () => {
+      //     root.innerHTML = `<p>init : ${++i} </p>`;
+      // })
+
+      // chap 2.
+      // component 안에는 데이터가 들어가 있으며 행위에 따라 값이 바뀔 수 있다.
+      // render에는 상태값을 표현한 결과물이 되며 render는 값이 바뀔 때마다 render를 해주어야 한다.
+      // react는 이를 쉽게 만들어 준다.
+
+      // const component = {
+      //     message : 'init',
+      //     count : 0,
+      //     render() {
+      //         return `<p>${this.message} : ${this.count}</p>`;
+      //     }
+      // };
+
+      // function render(rootElement, component){
+      //     rootElement.innerHTML = component.render();
+      // }
+
+      // // 초기화
+      // render(document.querySelector('#root'), component);
+      // document.querySelector('#btn_plus').addEventListener('click', () => {
+      //     component.message = 'update';
+      //     component.count = component.count + 1;
+
+      //     render(document.querySelector('#root'), component);
+      // })
+
+      // Chap3. React 사용하기
+
+      // React 컴포넌트 만들기
+
+      // 이 Component는 외부에서 porps로 받은 메시지와 count를 p태그 가운데 값으로 활용해(세번째 인자) 넣어준다.
+      // 인자로 props가 들어온다
+      const Component = (props) => {
+        // <p hello = "world"> 를 넣을때 두 번째 인자에 넣어준다.
+        // p태그 안의 값을 넣어준다.    \
+
+        // 실제 DOM이 아닌 가상 DOM으로 만들고 호출될 때 실제 DOM으로 생성한다.
+        return React.createElement(
+          "p",
+          null,
+          `${props.message} : ${props.count}`
+        );
+      };
+
+      ReactDOM.render(
+        React.createElement(
+          Component,
+          {
+            message: "init",
+            count: 0,
+          },
+          null
+        ),
+        document.querySelector("#root")
+      );
+
+      document.querySelector("#btn_plus").addEventListener("click", () => {
+        ReactDOM.render(
+          React.createElement(
+            Component,
+            {
+              message: "update",
+              count: 10,
+            },
+            null
+          ),
+          document.querySelector("#root")
+        );
+      });
+    </script>
+  </body>
+</html>

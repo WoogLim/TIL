@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="witdh=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>example</title>
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script
+      crossorigin
+      src="https://unpkg.com/react@17/umd/react.development.js"
+    ></script>
+    <script
+      crossorigin
+      src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"
+    ></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script type="text/babel">
+      // function 키워드
+
+      // {message: '안녕하세요}
+      // props가 변경되어 렌더가 다시 일어나는 부분
+      // function Component(props) {
+      //   return (
+      //     <div>
+      //       <h1>{props.message} 이것은 함수로 만든 컴포넌트 입니다.</h1>
+      //     </div>
+      //   );
+      // }
+
+      // 1.3. 함수로도 가능하다.
+      // 없을 때의 기본값으로 인자가 들어간다.
+      // Component.defaultProps = {
+      //   message: "기본값!!!",
+      // };
+
+      // class 키워드
+      // 랜더 메서드의 인자로 들어오는 것이 아닌 this.props으로 들어온다.
+      class Component extends React.Component {
+        // 2.1. 현재 상황에선 count값을 증가시킬순 없다.
+        // state를 작성하는 첫번째 방식
+        // state = {
+        //   count: 0,
+        // };
+
+        // state를 작성하는 두번째 방식
+        // 생성자 함수를 통해 최초의 props를 인자로 받아 호출
+        constructor(props) {
+          // 상속을 받기 때문의 부모 React.Component의 생성자를 호출
+          super(props);
+
+          // 부모의 state
+          this.state = { count: 0 };
+        }
+
+        // 2.2. 최초로 렌더가 실행되면 불려지는 함수가 있다. -> 2.3
+        render() {
+          return (
+            <div>
+              <h1>
+                {this.props.message} 이것은 클래스로 만든 컴포넌트 입니다.
+              </h1>
+              <p>{this.state.count}</p>
+            </div>
+          );
+        }
+
+        // 2.3. componentDidMount가 불려진다. 하지만 state값은 변하지 않는다.
+        componentDidMount() {
+          setTimeout(() => {
+            // 2.3.1. 직접 프로퍼티안의 내용을 변경한다고 해서 랜더에 반영되지 않는다. React규칙에 의해.
+            // this.state.count = this.state.count + 1;
+
+            // 2.3.2. 아래와 같이 this로 객체의 값을 바꿔주면 가능하다.
+            // 이와 같이 state가 변경이 되면 렌더가 호출되어 화면이 다시 그려지기 때문이다. React규칙에 의해.
+
+            // 방법1 .새로운 객체를 만들어 할당
+            // this.setState({
+            //   count: this.state.count + 1,
+            // });
+
+            // 방법2. 함수로 만들어 할당
+            // 초기의 state객체의 count키의 값의 + 1
+            // 앞에 값을 이용해 state값 변경
+            this.setState((previousState) => {
+              const newState = { count: previousState.count + 1 };
+              return newState;
+            });
+          }, 1000);
+        }
+
+        // 1.2.클래스 내부에서 기본 props를 설정할 수 있다.
+        static defaultProps = {
+          message: "기본값2",
+        };
+      }
+
+      // 1.1. 해당 클래스의 기본 Porps를 설정할 수 있다.
+      // Component.defaultProps = {
+      //   message: "기본값",
+      // };
+
+      ReactDOM.render(
+        // 1.4. 인자가 있다면 위에 생성한 기본값이 아닌 지정한 인자가 들어간다.
+        <Component message="기본값 아님" />,
+        document.querySelector("#root")
+      );
+    </script>
+  </body>
+</html>
