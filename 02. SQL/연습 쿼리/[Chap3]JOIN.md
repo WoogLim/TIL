@@ -1,11 +1,13 @@
 ### JOIN의 종류와 이해
+
 - 조인에는 세 가지 방법이 있다.
 
 ### [1] INNER JOIN
-- 보통 조인은 INNER JOIN 이다. 이너-조인은 조인 조건을 만족하는 데이터만 결합해 결과로 내보낸다.
-P1.PRO_ID = P2.PRO_ID 와 같은 조건
 
-- SQL의 WHERE 절에 사용하는 조건은 '필터 조건'과 '조인 조건' 두 가지가 있다. FROM절에 사용된 테이블이 하나면 WHERE절엔 필터만 존재하고 두 개 이상이라면 필터 조건과 조인 조건이 동시에 존재할 수 있다. 
+- 보통 조인은 INNER JOIN 이다. 이너-조인은 조인 조건을 만족하는 데이터만 결합해 결과로 내보낸다.
+  P1.PRO_ID = P2.PRO_ID 와 같은 조건
+
+- SQL의 WHERE 절에 사용하는 조건은 '필터 조건'과 '조인 조건' 두 가지가 있다. FROM절에 사용된 테이블이 하나면 WHERE절엔 필터만 존재하고 두 개 이상이라면 필터 조건과 조인 조건이 동시에 존재할 수 있다.
 
 ```SQL
 SELECT T1.COL_1, T2.COL_2
@@ -18,12 +20,13 @@ FROM   ( SELECT 'A' COL_1 FROM DUAL UNION ALL
          SELECT 'D' COL_1 FROM DUAL ) T2
 WHERE T1.COL_1 = T2.COL_1;
 ```
-![image](https://user-images.githubusercontent.com/51357635/122784408-6942ce00-d2ed-11eb-959a-59438c29140f.png)
----
+
+## ![image](https://user-images.githubusercontent.com/51357635/122784408-6942ce00-d2ed-11eb-959a-59438c29140f.png)
+
 - 조인 조건을 만족하느 데이터만 결합되어 결과에 나올 수 있다.
-(조인 조건은 (=)만이 아닌 다른 조건식도 가능)
+  (조인 조건은 (=)만이 아닌 다른 조건식도 가능)
 - 한 건과 N건이 조인되면 N건의 결과가 나온다.
-(위 B가 두번 나온것과 같이)
+  (위 B가 두번 나온것과 같이)
 
 1. INNER JOIN의 처리 과정
 
@@ -36,13 +39,16 @@ AND     T1.CUS_GD = 'A'
 AND     T2.ORD_DT >= TO_DATE('20170101','YYYYMMDD')
 AND     T2.ORD_DT <  TO_DATE('20170201','YYYYMMDD');
 ```
+
 위 SQL은 고객과 주문 테이블을 이너 조인. 고객등급은 'A'이면서 주문일시가 '2017년 1월' 주문만 처리한다.
 만일 1:1 대응이면 하나만 조회되지만 CUS_ID가 CUS_0003인 결과는 두개가 나온다. 1:M의 대응인 경우 M개가 나오기 때문이다.(INNER)
 기억할 것은 조인 조건이 = 뿐 아닌 != 같은 조인도 가능하다는 것이다.
 
 2. 여러 테이블의 조인
+
 - 만일 여러 테이블의 조인이 일어나는 경우 이를 테이블로 생각할 것이 아닌 데이터의 집합으로 생각해야한다.
 - A, B, C, D 테이블의 경우
+
 ```TEXT
 첫번째
 [1] A와 B를 조인한다.
@@ -53,27 +59,34 @@ AND     T2.ORD_DT <  TO_DATE('20170201','YYYYMMDD');
 [2] [A,B]와 C를 조인한다.
 [3] [A,B,C]와 D를 조인한다.
 ```
+
 - 조인의 순서가 변경되어도 성능 차이는 있을 수 있겠지만 조인 결과는 다르지 않다.
+
 ```TEXT
 여러 테이블 조인 시 생각할 것
 - 한순간에는 두 개의 데이터 집합에 대해서만 조인이 발생
 - 조인이 이루어진 두 개의 데이터 집합은 새로운 하나의 데이터 집합
 - 테이블 간의 관계를 이해하고 조인을 작성할 것
 ```
+
 ---
+
 3. 잘 못 작성된 조인(M:1:M 조인)
+
 ```TEXT
 관계 차수에 따른 조인 결과는 다음과 같다.
 - 1:1 관계 조인 = 1건의 결과 발생
 - 1:M 관계 조인 = M건의 결과 발생
 - M:M 관계 조인 = M*M건의 결과 발생
 ```
+
 - 위에 말한 M:M관계는 다대다 관계를 뜻.
 - 다대다 관계의 경우 OLTP 환경에서 발생할 일이 거의 없으며 있다면 이는 설계가 잘못된 것임을 인지해야 함.
 - 조인 실수는 보통 세 개의 테이블이 M:1:M관계일 때 발생한다.
 - 여기서 1은 PK를 가진 테이블 M은 FK를 지닌 테이블일 것이다.
 
 - 잘 못 작성한 쿼리의 예.
+
 ```SQL
 1  SELECT  T1.CUS_ID, T1.CUS_NM
 2          ,COUNT(DISTINCT T2.ITM_ID||'-'||TO_CHAR(T2.EVL_LST_NO)) EVAL_CNT
@@ -90,19 +103,23 @@ AND     T2.ORD_DT <  TO_DATE('20170201','YYYYMMDD');
 13 AND     T3.ORD_DT <  TO_DATE('20170401','YYYYMMDD')
 14 GROUP BY T1.CUS_ID, T1.CUS_NM;
 ```
+
 ![image](https://user-images.githubusercontent.com/51357635/122789173-fc7e0280-d2f1-11eb-9bb1-1496c01e6fee.png)
+
 ```TEXT
 - 위 SQL은 조인을 잘못 작성한 예이다.
 SQL 문법상으로는 문제가 없지만 DISTINCT를 사용해 최종 결과를 강제로 맞힌 SQL이기 때문에 조인을 잘 못 사용한 것이다.
 - 먼저 7, 9, 10, 11 순으로 T1과 T2가 필터에 따른 데이터가 조인되고 8, 12, 13 순으로 조인이 된다.
 - 이 단계에서 7, 9, 10, 11의 조인 결과로 2개의 아이템평가 기록
-- 두 번째 조인에서 3개의 주문 건수로 다음과 같이 2:3(M:M)조인이 발생해 최종 결과 건수는 맞지 않는 결과인 6건이 된다. 
+- 두 번째 조인에서 3개의 주문 건수로 다음과 같이 2:3(M:M)조인이 발생해 최종 결과 건수는 맞지 않는 결과인 6건이 된다.
 - 아래는 (DISTINCT를 제외한 경우의 결과)
 ```
+
 ![image](https://user-images.githubusercontent.com/51357635/122790196-0b18e980-d2f3-11eb-8042-19c5c3515df6.png)
 
-***
->해결 방법
+---
+
+> 해결 방법
 
 (1)M:1M의 조인 해결 - UNION ALL을 사용#1
 
@@ -129,12 +146,14 @@ SELECT T1.CUS_ID, MAX(T1.CUS_NM) CUS_NM, SUM(T1.EVL_CNT) EVL_CNT, SUM(T1.ORD_CNT
         ) T1
   GROUP BY T1.CUS_ID;
 ```
+
 이 방법은 UNION ALL을 수행할 대상이 많고 SELECT절에 사용하는 컬럼이 만흥면 SQL작성이 번거로워지지만 이해가 쉽다.
 ![image](https://user-images.githubusercontent.com/51357635/127189037-7b8d5c9d-ba52-4054-aa19-71bab28ce6c7.png)
 
 (2)M:1M의 조인 해결 - UNION ALL을 사용#2
 
 성능을 고려해 인라인-뷰 바깥으로 옮길 수 있다.
+
 ```SQL
 SELECT T1.CUS_ID, MAX(T1.CUS_NM) CUS_NM, SUM(T4.EVL_CNT) EVL_CNT, SUM(T4.ORD_CNT) ORD_CNT
   FROM M_CUS T1
@@ -156,11 +175,13 @@ SELECT T1.CUS_ID, MAX(T1.CUS_NM) CUS_NM, SUM(T4.EVL_CNT) EVL_CNT, SUM(T4.ORD_CNT
   WHERE T1.CUS_ID = T4.CUS_ID
   GROUP BY T1.CUS_ID;
 ```
+
 M_CUS에 대한 반복 사용을 제거해 성능에 이득이 있을 수 있다.
 ![image](https://user-images.githubusercontent.com/51357635/127188984-db267d12-707b-4a88-b25d-c4bb6021fd8b.png)
 
 (3)M:1M의 조인 해결 - 1:1:1을 사용
 GROUP BY를 통해 1:1:1조인을 한다.
+
 ```SQL
 SELECT  T1.CUS_ID
         ,T1.CUS_NM
@@ -189,14 +210,18 @@ SELECT  T1.CUS_ID
     AND  T1.CUS_ID = T3.CUS_ID
     AND  T1.CUS_ID = 'CUS_0023';
 ```
+
 ![image](https://user-images.githubusercontent.com/51357635/127343913-7ffb4bf8-acb3-4209-a085-15e4bf90c278.png)
 
 ---
+
 ### RANGE-JOIN
+
 - 대부분 조인은 '같다(=)'조건을 이용한다. 하지만 반드시 '같다(=)'조건으로 조인히자 읺고 '범위(LIKE, >, <)'을 줄 수도 있다.
-또한 때에 따라 '같지않다(!=)'를 이용할 수 있다.
+  또한 때에 따라 '같지않다(!=)'를 이용할 수 있다.
 
 - 1. CASE를 이용해 가격유형(ORD_AMT_TP)별로 주문 건수를 카운트
+
 ```SQL
 SELECT  T1.ORD_ST
         ,CASE WHEN T1.ORD_AMT >= 5000 THEN 'HIGH ORDER'
@@ -212,10 +237,12 @@ GROUP BY T1.ORD_ST
               END
 ORDER BY 1, 2;
 ```
+
 ![image](https://user-images.githubusercontent.com/51357635/127346274-7fdaf055-97a5-45e3-b31b-5b2239642e3a.png)
 위와 같은 SQL이 일회성이 아니라면 '주문금액유형'테이블을 만들어 조인으로 해결하는 것이 바람직하다.
 
 - 주문금액유형 테이블 생성
+
 ```SQL
 CREATE TABLE M_ORD_AMT_TP
 (
@@ -237,10 +264,12 @@ SELECT 'High Order', 5000, 999999999999 FROM DUAL;
 
 COMMIT;
 ```
+
 ![image](https://user-images.githubusercontent.com/51357635/127347520-f8e52944-0923-4e40-afa5-fca06f4d1990.png)
 ![image](https://user-images.githubusercontent.com/51357635/127347603-3b71453c-edd3-4a74-8450-d2df8f6305e6.png)
 
 - RANGE-JOIN을 이용해 가격유형(ORD_AMT_TP)별로 주문 건수를 카운트
+
 ```SQL
 SELECT  T1.ORD_ST, T2.ORD_AMT_TP, COUNT(*) ORD_CNT
   FROM  T_ORD T1
@@ -250,8 +279,8 @@ SELECT  T1.ORD_ST, T2.ORD_AMT_TP, COUNT(*) ORD_CNT
  GROUP BY T1.ORD_ST, T2.ORD_AMT_TP
  ORDER BY 1, 2;
 ```
-![image](https://user-images.githubusercontent.com/51357635/127348826-8efe9901-a880-4b1d-9a35-41d50c175f2e.png)
 
+![image](https://user-images.githubusercontent.com/51357635/127348826-8efe9901-a880-4b1d-9a35-41d50c175f2e.png)
 
 이처럼 '같다(=)'라는 표현 말고도 다른 조인 방법이 있다는 것을 알아야 한다.
 
@@ -262,17 +291,20 @@ SELECT  T1.ORD_ST, T2.ORD_AMT_TP, COUNT(*) ORD_CNT
 - INNER 조인의 경우 조건에 부합한 데이터만 결과로 나오지만 OUTER 조인의 경우 그러하지 않다.
 
 - OUTER 조인을 위해 **기준 데이터 집합**과 **참조 데이터 집합**개념을 알아야 한다.
+
 ```TEXT
 1. 기준 데이터 집합 : OUTER 조인의 기준이 되는 집합
 2. 참조 데이터 집합 : OUTER 조인의 참조가 되는 집합
 ```
+
 - **기준 데이터 집합(OUTER)** 은 조인 조건을 만족하지 않아도 모두 결과에 포함된다
 - **'(+)'** 표시가 붙은 컬럼은 OUTER 조인의 **참조 데이터 집합**이다.
 - **'(+)'** 표시가 없는 컬럼은 OUTER 조인의 **기준 데이터 집합**이다.
-: 기준 데이터 집합은 조인 조건에 부합하지 않더라도 결과가 나온다
-(이때, 기준 데이터 집합의 참조쪽 결과는 NULL로 값이 채워진다.)
+  : 기준 데이터 집합은 조인 조건에 부합하지 않더라도 결과가 나온다
+  (이때, 기준 데이터 집합의 참조쪽 결과는 NULL로 값이 채워진다.)
 
 - OUTER 조인, 한 명은 평가가 있지만 한 명은 평가가 없음.
+
 ```SQL
 SELECT  T1.CUS_ID, T1.CUS_NM
         ,T2.CUS_ID, T2.ITM_ID, T2.EVL_LST_NO
@@ -282,9 +314,11 @@ SELECT  T1.CUS_ID, T1.CUS_NM
    AND  T1.CUS_ID = T2.CUS_ID(+)
  ORDER BY T1.CUS_ID;
 ```
+
 ![image](https://user-images.githubusercontent.com/51357635/127352232-21d14090-064c-43b8-a993-89aa24bfd939.png)
 
 - SQL 참조 순서는 다음과 같다.
+
 ```TEXT
 - T1_CUS_ID = T2_CUS_ID(+)조건으로 아우터 조인을 수행한 결과
   : 조인 조건에 (+)가 붙지 않은 T1은 기준 데이터 집합
@@ -297,6 +331,7 @@ SELECT  T1.CUS_ID, T1.CUS_NM
 ### 1. OUTER-JOIN의 필터 조건
 
 - OUTER 조인 시 '참조 데이터 집합'에도 '(+)'표시를 반드시 해주어야 한다.
+
 ```SQL
 -- 조건에 (+)가 없는 경우
 SELECT  T1.CUS_ID, T1.CUS_NM
@@ -309,6 +344,7 @@ SELECT  T1.CUS_ID, T1.CUS_NM
    AND  T2.EVL_DT >= TO_DATE('20170201','YYYYMMDD')
    AND  T2.EVL_DT <  TO_DATE('20170301','YYYYMMDD');
 ```
+
 ![image](https://user-images.githubusercontent.com/51357635/127873339-6b13694f-d188-4d6d-b29e-c987392cf78a.png)
 
 ```SQL
@@ -323,6 +359,7 @@ SELECT  T1.CUS_ID, T1.CUS_NM
    AND  T2.EVL_DT(+) >= TO_DATE('20170201','YYYYMMDD')
    AND  T2.EVL_DT(+) <  TO_DATE('20170301','YYYYMMDD');
 ```
+
 ![image](https://user-images.githubusercontent.com/51357635/127873472-35efbaed-872a-47cc-9cc6-1ea74e47aa65.png)
 
 ```TEXT
@@ -348,7 +385,8 @@ SELECT  T1.CUS_ID, T2_ITM_ID, T1.ORD_DT, T3.ITM_ID, T3.EVL_PT
    AND  T3.CUS_ID(+) = T1.CUS_ID
    AND  T3.ITM_ID(+) = T2.ITM_ID;
 ```
-OUTER 조인에서 참조 데이터 집합은 기준 데이터 집합을 두 개 가질 수 없다. 
+
+OUTER 조인에서 참조 데이터 집합은 기준 데이터 집합을 두 개 가질 수 없다.
 이를 해결하기 위해선 인라인-뷰를 이용해야 한다.
 
 ```SQL
@@ -369,6 +407,7 @@ SELECT  T0.CUS_ID, T0.ITM_ID, T0.ORD_DT
    AND  T3.ITM_ID(+) = T0.ITM_ID
  ORDER BY T0.CUS_ID;
 ```
+
 ![image](https://user-images.githubusercontent.com/51357635/127875626-8f1dee80-9a03-4b9a-be6b-f688731dc582.png)
 
 ```SQL
@@ -385,9 +424,11 @@ SELECT  T1.CUS_ID, T2.ITM_ID, T1.ORD_DT
           ON(T3.CUS_ID = T1.CUS_ID
             AND T3.ITM_ID = T2.ITM_ID);
 ```
+
 대부분 DBMS가 ANSI표준을 이용하기 때문에 ANSI표준을 써도 무방하다.
 
 ### 3. OUTER-JOIN이 포함된 여러 테이블의 조인
+
 ```SQL
 SELECT  T1.CUS_ID, T2.ORD_SEQ, T2.ORD_DT, T3.ORD_SEQ, T3.ITM_ID
   FROM  M_CUS T1
@@ -399,6 +440,7 @@ SELECT  T1.CUS_ID, T2.ORD_SEQ, T2.ORD_DT, T3.ORD_SEQ, T3.ITM_ID
    AND  T2.ORD_DT(+) < TO_DATE('20170123','YYYYMMDD')
    AND  T3.ORD_SEQ = T2.ORD_SEQ;
 ```
+
 위 쿼리의 결과는 없다.
 
 ![image](https://user-images.githubusercontent.com/51357635/128044857-ed606614-0bcc-472b-9294-7dd930c87bf2.png)
@@ -455,6 +497,7 @@ SELECT  T1.ITM_ID, T1.ITM_NM, NVL(T2.ORD_QTY,0)
 적절히 가독성 좋은 SQL은 이렇듯 유지보수에 도움을 준다.
 
 - 마무리. OUTER 조인의 특징
+
 ```TEXT
 1. OUTER 조인은 기준 데이터 집합과 참조 데이터 집합으로서 조인이 이루어진다.
 2. 참조 데이터 집합은 조인 조건에 (+)가 표시된 쪽이며 반대쪽은 기준 데이터 집합이 된다.
@@ -467,9 +510,11 @@ SELECT  T1.ITM_ID, T1.ITM_NM, NVL(T2.ORD_QTY,0)
 ```
 
 ---
+
 ### CATESIAN-JOIN
 
 ### 1. CATESIAN-JOIN 이해하기
+
 - 일명 '묻지마 조인'이라 불린다.
 - FROM절에 테이블 A와 B가 있는 경우 A에는 2건, B에는 4건이 있을 때, 조인 조건을 주지 않는 다면 카테시안-조인이 된다. 결국 8건의 데이터가 만들어진다.
 
@@ -480,6 +525,7 @@ SELECT  T1.CUS_GD, T2.ITM_TP
         ,(SELECT DISTINCT A.ITM_TP FROM M_ITM A) T2
  ORDER BY T1.CUS_GD, T2.ITM_TP;
 ```
+
 ![image](https://user-images.githubusercontent.com/51357635/128734653-74f9aea0-657c-47d9-a498-2e5d748f87f4.png)
 
 ```TEXT
@@ -492,15 +538,17 @@ SELECT  T1.CUS_GD, T2.ITM_TP
 ```
 
 ### 2. CATESIAN-JOIN의 위험성
+
 - 카테시안-조인은 매우 위험한 조인이다. 시스템 장애를 유발할 수 있기 때문이다.
 - 조인 조건의 누락이 일어나거나 별칭에 실수가 발생 하면 이 문제를 야기할 수 있다. 때문에 SQL 실행 전 조인 조건을 한 번 더 확인해야 한다.
-  
+
 ```SQL
 -- 조인 조건의 누락
 SELECT  COUNT(*)
   FROM  T_ORD T1
         ,T_ORD_DET T2;
 ```
+
 ```SQL
 -- 조인 조건의 별칭 실수
 SELECT  COUNT(8)
@@ -510,6 +558,7 @@ SELECT  COUNT(8)
 ```
 
 ### 3. 분석마스터 만들기
+
 - 카테시안-조인은 분석 마스터를 만들 때 유용하다.
 
 ```SQL
@@ -530,4 +579,132 @@ SELECT  T1.CUS_ID, T1.CUS_NM, T2.ORD_YM, T2.ORD_CNT
    AND  T1.CUS_ID = T2.CUS_ID(+)
  ORDER BY  T1.CUS_ID, T2.ORD_YM;
 ```
+
 ![image](https://user-images.githubusercontent.com/51357635/128737470-a5b4a806-bd38-4d5a-ba45-d0c86b9fed2a.png)
+
+고객별 주문이 존재하는 월만 조회한다.
+
+```SQL
+-- 특정 고객 두 명의 2월, 3월, 4월의 월별 주문 건수 - 주문이 없는 월도 0으로 나오게 처리
+SELECT T0.CUS_ID, T0.CUS_NM, T0.BASE_YM, NVL(T2.ORD_CNT,0) ORD_CNT
+  FROM ( SELECT T1.CUS_ID
+                ,T1.CUS_NM
+                ,T4.BASE_YM
+           FROM M_CUS T1
+                ,(
+                SELECT TO_CHAR(ADD_MONTHS(TO_DATE('20170201','YYYYMMDD'), ROWNUM - 1),'YYYYMM') BASE_YM
+                  FROM DUAL
+                  CONNECT BY ROWNUM <= 3
+                  ) T4
+          WHERE T1.CUS_ID IN('CUS_0003','CUS_0004')) T0
+         ,(
+         SELECT A.CUS_ID
+                ,TO_CHAR(A.ORD_DT,'YYYYMM') ORD_YM
+                ,COUNT(*) ORD_CNT
+           FROM T_ORD A
+          WHERE A.CUS_ID IN('CUS_0003','CUS_0004')
+            AND A.ORD_DT >= TO_DATE('20170201','YYYYMMDD')
+            AND A.ORD_DT < TO_DATE('20170501','YYYYMMDD')
+          GROUP BY A.CUS_ID
+                   , TO_CHAR(A.ORD_DT,'YYYYMM')) T2
+ WHERE T0.CUS_ID = T2.CUS_ID(+)
+   AND T0.BASE_YM = T2.ORD_YM(+)
+ ORDER BY T0.CUS_ID, T0.BASE_YM;
+```
+
+![image](https://user-images.githubusercontent.com/51357635/131343761-d9ae0388-38c8-4dcd-8551-2c42963ba59d.png)
+
+```TEXT
+1. M_CUS에서 두 명의 고객만 선택
+2. CONNECT BY ROWNUM을 이용 3개월 치의 데이터 생성
+3. 1번과 2번을 카테시안-조인 처리, 고객별로 3개월씩 총 6건의 마스터가 생성
+4. T_ORD에서 특정 고객들의 3개월간 주문에 대해, 고객 + 주문년월별 건수를 집계
+5. 3번 기준 데이터 집합으로 4번과 아우터-조인
+```
+
+```SQL
+-- 고객등급, 아이템유형별 주문수량
+SELECT  A.CUS_GD, D.ITM_TP
+        , SUM(C.ORD_QTY) ORD_QTY
+  FROM  M_CUS A
+        , T_ORD B
+        , T_ORD_DET C
+        , M_ITM D
+ WHERE  A.CUS_ID = B.CUS_ID
+   AND  C.ORD_SEQ = B.ORD_SEQ
+   AND  D.ITM_ID = C.ITM_ID
+   AND  B.ORD_ST = 'COMP'
+ GROUP BY A.CUS_GD, D.ITM_TP
+ ORDER BY A.CUS_GD, D.ITM_TP;
+```
+
+![image](https://user-images.githubusercontent.com/51357635/131345860-d3617302-57f6-463f-8b16-a5a14273fc33.png)
+
+```SQL
+-- 고객등급, 아이템유형별 주문수량 - 주문이 없는 아이템 유형도 나오도록 처리
+SELECT T0.CUS_GD, T0.ITM_TP, NVL(T3.ORD_QTY,0) ORD_QTY
+FROM    (   SELECT  T1.CUS_GD, T2.ITM_TP
+            FROM    (SELECT A.BAS_CD CUS_GD FROM C_BAS_CD A WHERE A.BAS_CD_DV = 'CUS_GD') T1
+                    ,(SELECT A.BAS_CD ITM_TP FROM C_BAS_CD A WHERE A.BAS_CD_DV = 'ITM_TP') T2
+        ) T0
+        ,(  SELECT  A.CUS_GD, D.ITM_TP
+                    , SUM(C.ORD_QTY) ORD_QTY
+              FROM  M_CUS A
+                    , T_ORD B
+                    , T_ORD_DET C
+                    , M_ITM D
+             WHERE  A.CUS_ID = B.CUS_ID
+               AND  C.ORD_SEQ = B.ORD_SEQ
+               AND  D.ITM_ID = C.ITM_ID
+               AND  B.ORD_ST = 'COMP'
+             GROUP BY A.CUS_GD, D.ITM_TP
+        ) T3
+WHERE T0.CUS_GD = T3.CUS_GD(+)
+  AND T0.ITM_TP = T3.ITM_TP(+)
+  ORDER BY T0.CUS_GD, T0.ITM_TP;
+```
+
+![image](https://user-images.githubusercontent.com/51357635/131347028-0353bcef-a388-44df-9713-6e7238ffb6f8.png)
+
+### 3.2 테스트 데이터 만들기
+
+- 대량의 테스트 데이터를 만들기 위해 카테시안-조인을 사용할 수 있다.
+
+```SQL
+SELECT  ROWNUM ORD_NO, T1.CUS_ID, T2.ORD_ST, T3.PAY_TP, T4.ORD_DT
+  FROM  M_CUS T1
+        ,(  SELECT  'WAIT' ORD_ST FROM DUAL UNION ALL
+            SELECT  'COMP' ORD_ST FROM DUAL  ) T2
+        ,(  SELECT  'CARD' PAY_TP FROM DUAL UNION ALL
+            SELECT  'BANK' PAY_TP FROM DUAL UNION ALL
+            SELECT  NULL PAY_TP FROM DUAL) T3
+        ,(  SELECT  TO_DATE('20170101','YYYYMMDD') + (ROWNUM + 1) ORD_DT
+  FROM DUAL
+  CONNECT BY ROWNUM <= 365 ) T4;
+```
+
+![image](https://user-images.githubusercontent.com/51357635/131348586-320a7d9f-b7c2-40ed-bf49-0ad9f8a47cd9.png)
+
+```TEXT
+1. 고객 테이블과 T2 주문상태 집합은 카테시안-조인하면 고객별 모든 주문상태가 만들어진다.
+2. T3 지불유형 집합까지 카테시안-조인을 하면, 고객-주문상태-지불유형별로 조합 가능한 모든 데이터가 생성된다.
+3. T4 1년치의 일자 데이터를 카테시안-조인하면 1년에 달하는 테스트 데이터를 생성할 수 있다.
+```
+
+```SQL
+-- 의미 없는 숫자 집합
+SELECT ROWNUM RNO FROM DUAL A CONNECT BY ROWNUM <= 10;
+```
+
+- 부하 테스트나 성능 테스트를 위해 더 많은 데이터가 필요하면 의미 없는 숫자 집합을 인라인-뷰로 만들어 카테시안 조인을 추가하면 된다. 위 쿼리문으로 10배의 데이터를 만들 수 있다.
+
+```SQL
+-- 데이터 값 별로 분포도 조정
+SELECT 'WAIT' ORD_ST FROM DUAL CONNECT BY ROWNUM <=2 UNION ALL
+SELECT 'COMP' ORD_ST FROM DUAL CONNECT BY ROWNUM <=3;
+```
+
+![image](https://user-images.githubusercontent.com/51357635/131350070-e9da412c-5f14-4777-b787-8a83440d8f22.png)
+
+- 테스트 데이터 생성 시 데이터 별 분포도를 조정할 필요가 있다.
+- 카테시안 조인은 유용하지만 시스템 장애를 유발할 수 있어 주의를 기울여 사용해야 한다.
