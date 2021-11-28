@@ -19,85 +19,86 @@
     ></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script type="text/babel">
-      // function Component() {
-      //   return (
-      //     <div>
-      //       <button
-      //         onClick={() => {
-      //           console.log("clicked");
-      //         }}
-      //       >
-      //         클릭
-      //       </button>
-      //     </div>
-      //   );
-      // }
+      // [1] 생성 및 마운트 순서
+      // constructor
+      // componentWillMount
+      // render
+      // componentDidMount
 
-      class Component extends React.Component {
+      class App extends React.Component {
         state = {
-          count: 0,
+          age: 39,
         };
+        interval = null;
 
-        // constructor(props) {
-        //   super(props);
+        constructor(props) {
+          super(props);
 
-        // 컴포넌트 클래스의 this.click 에 현재 클래스의 this를 바인드한다.
-        // 바인드된 this에는 click 메서드가 포함되어 있기 때문에 2.3 74번 라인 처럼 사용할 수 있다.
-        //   this.click = this.click.bind(this);
-        // }
+          console.log("constructor", props);
+        }
 
         render() {
-          // 1. JSX를 이용해 이벤트를 핸들링 하는 법
-          // return (
-          //   <div>
-          //     <p>{this.state.count}</p>
-          //     <button
-          // JSX 를 이용해 이미 존재하는 엘리먼트에
-          // 이벤트 핸들러로 적용해 사용할 수 있다.
-          // onClick={() => {
-          // state 값을 인자로 받아 화살표 함수로 바로 리턴
-          // state 키,값들을 복사하고 ...state
-          // count 키의 값을 변경. 현재 복사된 state의 count값에 + 1
-          //         this.setState((state) => ({
-          //           ...state,
-          //           count: state.count + 1,
-          //         }));
-          //       }}
-          //     >
-          //       클릭
-          //     </button>
-          //   </div>
-          // );
-          // 2.3
+          console.log("render");
           return (
             <div>
-              <p>{this.state.count}</p>
-              <button onClick={this.click}>클릭</button>
+              <h2>
+                Hello {this.props.name} - {this.state.age}
+              </h2>
             </div>
           );
         }
 
-        // 2.1 메서드로 이벤트를 핸들링 하는 법
-        // 외부 메서드를 이용해 핸들링을 하기 위해선 this가 정의되어야 한다. -> 2.2. 41번 라인
-        // click() {
-        //   console.log("clicked");
-        //   this.setState((state) => ({
-        //     ...state,
-        //     count: state.count + 1,
-        //   }));
+        // componentWillMount() {
+        //   console.log("componentWillMount");
         // }
 
-        // 3. 화살표 함수를 이용해 사용하는 것이 가장 간편하다.
-        click = () => {
-          console.log("clicked");
-          this.setState((state) => ({
-            ...state,
-            count: state.count + 1,
-          }));
-        };
+        // 바뀐 형태는 클래스 컴포넌트의 static 메서드로 지정해주어야 한다.
+        // 기존의 componentWillMount는 오버라이딩이였음.
+        // return 값이 존재해야 한다.
+        // render 시작 전에 호출된다.
+        // nextProps를 받아 return부분에 새로운 State를 설정할 수 있다.
+
+        static getDerivedStateFromProps(nextProps, prevProps) {
+          console.log("getDerivedStateFromProps", nextProps, prevProps);
+
+          return {
+            age: 390,
+          };
+        }
+
+        componentDidMount() {
+          console.log("componentDidMount");
+
+          this.interval = setInterval(() => {
+            console.log("setInterval");
+            this.setState((state) => ({ ...state, age: state.age + 1 }));
+          }, 1000);
+        }
+
+        // componentWillReceiveProps(nextProps) {
+        //   console.log("componentWillReceiveProps", nextProps);
+        // }
+
+        shouldComponentUpdate(nextProps, nextState) {
+          console.log("shouldComponentUpdate", nextProps, nextState);
+
+          return true;
+        }
+
+        // componentWillUpdate(nextProps, nextState) {
+        //   console.log("componentWillUpdate", nextProps, nextState);
+        // }
+
+        componentDidUpdate(prevProps, prevState) {
+          console.log("componentDidUpdate", prevProps, prevState);
+        }
+
+        componentWillUnmount() {
+          clearInterval(this.interval);
+        }
       }
 
-      ReactDOM.render(<Component />, document.querySelector("#root"));
+      ReactDOM.render(<App name="Mark" />, document.querySelector("#root"));
     </script>
   </body>
 </html>
