@@ -3,6 +3,7 @@ package com.bignerdranch.android.geoguiz
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -10,7 +11,8 @@ import androidx.appcompat.app.AppCompatActivity
 class MainActivity : AppCompatActivity() {
     private lateinit var trueButton : Button
     private lateinit var falseButton : Button
-    private lateinit var nextButton : Button
+    private lateinit var previousButton : ImageButton
+    private lateinit var nextButton : ImageButton
     private lateinit var questionTextView : TextView
     
     // listof 는 List를 생성하는 코틀린의 컬렉션 함수
@@ -30,6 +32,7 @@ class MainActivity : AppCompatActivity() {
 
         trueButton = findViewById(R.id.true_button);
         falseButton = findViewById(R.id.false_button);
+        previousButton = findViewById(R.id.previous_button);
         nextButton = findViewById(R.id.next_button);
         questionTextView = findViewById(R.id.question_text_view)
 
@@ -63,7 +66,17 @@ class MainActivity : AppCompatActivity() {
 //            }.show()
             checkAnswer(false);
         }
-        
+
+        // Previous 버튼
+        previousButton.setOnClickListener{
+            currentIndex = if(currentIndex < 1){
+                (questionBank.size - 1);
+            }else{
+                currentIndex - 1
+            }
+            updateQuestion()
+        }
+
         // Next 버튼
         nextButton.setOnClickListener{
             currentIndex = (currentIndex + 1) % questionBank.size
@@ -71,6 +84,12 @@ class MainActivity : AppCompatActivity() {
 //            questionTextView.setText(questionTextResId)
             updateQuestion()
         }
+
+        questionTextView.setOnClickListener{
+            currentIndex = (currentIndex + 1) % questionBank.size
+            updateQuestion()
+        }
+
         updateQuestion()
     }
 

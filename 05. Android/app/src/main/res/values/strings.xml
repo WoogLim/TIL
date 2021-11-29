@@ -12,7 +12,10 @@
     <string name="question_asia">바이칼 호수는 세계에서 가장 오래되고 가장 깊은 담수호다.</string>
     <string name="true_button">True</string>
     <string name="false_button">False</string>
+    <string name="previous_button">Previous</string>
     <string name="next_button">Next</string>
     <string name="correct_toast">정답!</string>
     <string name="incorrect_toast">틀렸음!</string>
+    <string name="previous_help">이전 문제</string>
+    <string name="next_help">다음 문제</string>
 </resources>
