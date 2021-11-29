@@ -16,6 +16,7 @@
     <string name="next_button">Next</string>
     <string name="correct_toast">정답!</string>
     <string name="incorrect_toast">틀렸음!</string>
+    <string name="done_toast">이미 결과가 입력된 문제입니다.</string>
     <string name="previous_help">이전 문제</string>
     <string name="next_help">다음 문제</string>
 </resources>
