@@ -21,19 +21,17 @@ class MainActivity : AppCompatActivity() {
     private lateinit var questionTextView : TextView
     
     // listof 는 List를 생성하는 코틀린의 컬렉션 함수
-    private val questionBank = listOf(
-        Question(R.string.question_australia, true, false),
-        Question(R.string.question_oceans, true, false),
-        Question(R.string.question_mideast, false, false),
-        Question(R.string.question_africa, false, false),
-        Question(R.string.question_americas, true, false),
-        Question(R.string.question_asia, true, false))
-    
+    private var questionBank = listOf(
+        Question(R.string.question_australia, true, false, false),
+        Question(R.string.question_oceans, true, false, false),
+        Question(R.string.question_mideast, false, false, false),
+        Question(R.string.question_africa, false, false, false),
+        Question(R.string.question_americas, true, false, false),
+        Question(R.string.question_asia, true, false, false))
+
     private var currentIndex = 0;
 
-    private var score = 0;
-
-    private var total = 0;
+    private var issueSeq = 0;
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -141,27 +139,41 @@ class MainActivity : AppCompatActivity() {
 
     // 뷰로 부터 받은 값 확인
     private fun checkAnswer(userAnswer : Boolean){
-        if(questionBank[currentIndex].done == true){
+        if(questionBank[currentIndex].done){
             Toast.makeText(this, R.string.done_toast, Toast.LENGTH_SHORT).show()
             return;
         }
 
-        val correctAnswer = questionBank[currentIndex].answer
+        var currentAnswer = questionBank[currentIndex].answer
 
-        val messageResId = if (userAnswer == correctAnswer){
-            R.string.correct_toast
-            score + 1;
-
+        if (userAnswer == currentAnswer){
+            this.questionBank[currentIndex].done = true;
+            this.questionBank[currentIndex].result = true;
+            issueSeq++;
+            Toast.makeText(this, R.string.correct_toast, Toast.LENGTH_SHORT).show();
         } else {
-            R.string.incorrect_toast
+            this.questionBank[currentIndex].done = true;
+            this.questionBank[currentIndex].result = false;
+            issueSeq++;
+            Toast.makeText(this, R.string.incorrect_toast, Toast.LENGTH_SHORT).show();
         }
 
-        Toast.makeText(this, messageResId, Toast.LENGTH_SHORT).show()
+        if(issueSeq == questionBank.size){
+            totalScore();
+        }
     }
 
     private fun totalScore(){
-        val score : Int = ((this.score/questionBank.size)*100)
-        var scoreMsg : String = score.toString()+"점 입니다."
-        Toast.makeText(this, scoreMsg, Toast.LENGTH_SHORT).show()
+        var questionItr = questionBank.iterator();
+        var successSeq = 0;
+
+        while(questionItr.hasNext()){
+            if(questionItr.next().result){
+                successSeq++;
+            }
+        }
+
+        var totalScore = Math.round(((successSeq.toDouble()/questionBank.size)*100))
+        Toast.makeText(this, totalScore.toString()+"점 입니다.", Toast.LENGTH_SHORT).show();
     }
 }
