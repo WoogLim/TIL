@@ -96,15 +96,15 @@ class MainActivity : AppCompatActivity() {
      *  프로세스 종료, 장치의 구성이 변경에도 Bundle 객체를 사용해 엑티비티 레코드를 저장한다.
      *  엑티비티 최초 실행시 Bundel 객체 참조는 null. 화면 전환 등 구성 변경시 onSaveInstanceState(Bundle)을 호출 보존 데이터를 활용한다.
      *  이후 생성된 엑티비티 인스턴스에도 안드로이드 OS가 저장된 Bundle 상태를 onCreate(Bundle?)의 인자로 전달한다.
-     */
+     **/
     /** ViewModel
      *  ViewModel은 엑티비티의 동적 데이터를 처리할 때 편리하다.
      *  구성 변경이 있더라도 다운로드 작업을 계속하게 해준다. 사용자가 엑티비티 종료시 자동으로 클린업된다.
      *  프로세스 종료시에는 ViewModel이 클린업을 처리하지 못하며 자신이 가진 프로세스와 함께 메모리에서 제거된다.
      *  SIS가 주목받는 이유가 이때문이다. 허나 제약이 존재한다. SIS는 직렬화되어 디스크에 저장되므로 크거나 복잡한 객체는 피해야한다.
      *  !) lifecycle-viewmodel-savedstate 라이브러리 배포로 인해 해당 단점 또한 완화 가능. 두 가지를 적절히 사용하면 좋다.
-     *  소량의 정보는 SIS, 많은 데이터 저장 및 캐시 저장을 위해 ViewModel을 사용
-     * /
+     *  소량의 정보는 SIS, 많은 데이터 저장 및 캐시 저장을 위해서는 ViewModel을 사용한다.
+     **/
     override fun onSaveInstanceState(savedInstanceState: Bundle) {
         super.onSaveInstanceState(savedInstanceState)
         Log.d(TAG, "onSaveInstanceState")
