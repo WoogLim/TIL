@@ -65,6 +65,13 @@
     이미지 선택은 안드로이드 운영체제가 적합한 이미지를 자동으로 선택한다.
     -->
 
+    <Button
+        android:id="@+id/cheat_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="@string/cheat_button"/>
+
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

@@ -19,4 +19,8 @@
     <string name="done_toast">이미 결과가 입력된 문제입니다.</string>
     <string name="previous_help">이전 문제</string>
     <string name="next_help">다음 문제</string>
+    <string name="warning_text">힌트를 보시겠습니까?</string>
+    <string name="show_answer_button">힌트 보기</string>
+    <string name="cheat_button">힌트 열람</string>
+    <string name="judgment_toast">ㅋㅋㅋㅋㅋㅋ</string>
 </resources>

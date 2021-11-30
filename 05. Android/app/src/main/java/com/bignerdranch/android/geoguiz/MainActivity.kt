@@ -23,6 +23,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var previousButton : ImageButton
     private lateinit var nextButton : ImageButton
     private lateinit var questionTextView : TextView
+    private lateinit var cheatButton : Button
 
     // ViewModelProvider(this).get(QuizViewModel::class.java)
     //        val provider : ViewModelProvider = ViewModelProvider(this)
@@ -55,7 +56,8 @@ class MainActivity : AppCompatActivity() {
         falseButton = findViewById(R.id.false_button);
         previousButton = findViewById(R.id.previous_button);
         nextButton = findViewById(R.id.next_button);
-        questionTextView = findViewById(R.id.question_text_view)
+        questionTextView = findViewById(R.id.question_text_view);
+        cheatButton = findViewById(R.id.cheat_button);
 
         // True 버튼
         trueButton.setOnClickListener{ view : View ->
@@ -71,6 +73,14 @@ class MainActivity : AppCompatActivity() {
         nextButton.setOnClickListener{
             quizViewModel.moveToNext()
             updateQuestion()
+        }
+
+        cheatButton.setOnClickListener{
+            // CheatActivity를 시작시킨다.
+//            var intent = Intent(this, CheatActivity::class.java)
+            val answerIsTrue = quizViewModel.currentQuestionAnswer
+            val intent = CheatActivity.newIntent(this@MainActivity, answerIsTrue)
+            startActivity(intent)
         }
 
         updateQuestion()
@@ -122,6 +132,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun updateQuestion(){
+//        Log.d(TAG, "Updating question text", Exception())
         val questionTextResId = quizViewModel.currentQuestionText
         questionTextView.setText(questionTextResId)
     }
