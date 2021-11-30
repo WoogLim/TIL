@@ -14,13 +14,15 @@ import androidx.lifecycle.ViewModelProvider
 // 특정 클래스의 인스턴스를 생성하지 않고 앱이 실행되는 동안 계속 보존
 private const val TAG = "MainActivity"
 
+// Bundle 객체에 저장될 데이터의 키
+private const val KEY_INDEX = "index"
+
 class MainActivity : AppCompatActivity() {
     private lateinit var trueButton : Button
     private lateinit var falseButton : Button
     private lateinit var previousButton : ImageButton
     private lateinit var nextButton : ImageButton
     private lateinit var questionTextView : TextView
-
 
     // ViewModelProvider(this).get(QuizViewModel::class.java)
     //        val provider : ViewModelProvider = ViewModelProvider(this)
@@ -41,9 +43,13 @@ class MainActivity : AppCompatActivity() {
         // INFO Log.i() 정보성 메시지
         // DEBUG Log.d() 디버깅 출력
         // VERBOSE Log.v() 개발 전용
-        Log.d(TAG, "onCreate(Bundle?) called")
-        setContentView(R.layout.activity_main)
+        Log.d(TAG, "onCreate(Bundle?) called");
+        setContentView(R.layout.activity_main);
 
+        // 값이 있다면 저장. 없거나 null 이면 0으로 저장
+        // 인스턴스 최초 생성시 null
+        val currentIndex = savedInstanceState?.getInt(KEY_INDEX,0) ?: 0;
+        quizViewModel.currentIndex = currentIndex;
 
         trueButton = findViewById(R.id.true_button);
         falseButton = findViewById(R.id.false_button);
@@ -83,6 +89,12 @@ class MainActivity : AppCompatActivity() {
     override fun onPause() {
         super.onPause()
         Log.d(TAG, "onPause() called")
+    }
+
+    override fun onSaveInstanceState(savedInstanceState: Bundle) {
+        super.onSaveInstanceState(savedInstanceState)
+        Log.d(TAG, "onSaveInstanceState")
+        savedInstanceState.putInt(KEY_INDEX, quizViewModel.currentIndex);
     }
 
     override fun onStop() {
