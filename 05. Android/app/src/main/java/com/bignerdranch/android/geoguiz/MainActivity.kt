@@ -8,6 +8,7 @@ import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 
 // 최상위 수준 속성
 // 특정 클래스의 인스턴스를 생성하지 않고 앱이 실행되는 동안 계속 보존
@@ -19,19 +20,18 @@ class MainActivity : AppCompatActivity() {
     private lateinit var previousButton : ImageButton
     private lateinit var nextButton : ImageButton
     private lateinit var questionTextView : TextView
-    
-    // listof 는 List를 생성하는 코틀린의 컬렉션 함수
-    private var questionBank = listOf(
-        Question(R.string.question_australia, true, false, false),
-        Question(R.string.question_oceans, true, false, false),
-        Question(R.string.question_mideast, false, false, false),
-        Question(R.string.question_africa, false, false, false),
-        Question(R.string.question_americas, true, false, false),
-        Question(R.string.question_asia, true, false, false))
 
-    private var currentIndex = 0;
 
-    private var issueSeq = 0;
+    // ViewModelProvider(this).get(QuizViewModel::class.java)
+    //        val provider : ViewModelProvider = ViewModelProvider(this)
+    //        val quizViewModel = provider.get(QuizViewModel::class.java)
+    //        Log.d(TAG, "Got a QuizViewModel: $quizViewModel")
+
+    // quizViewModel을 var이 아닌 val 속성으로 선언이 가능하다. ViewModel은 인스턴스 생성시 한번만 저장하기 때문에 lazy를 사용한다.
+    // 최초 사용시에만 해당 인스턴스를 생성한다. 초기화를 늦출수 있음.
+    private val quizViewModel : QuizViewModel by lazy{
+        ViewModelProvider(this).get(QuizViewModel::class.java)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,6 +44,7 @@ class MainActivity : AppCompatActivity() {
         Log.d(TAG, "onCreate(Bundle?) called")
         setContentView(R.layout.activity_main)
 
+
         trueButton = findViewById(R.id.true_button);
         falseButton = findViewById(R.id.false_button);
         previousButton = findViewById(R.id.previous_button);
@@ -52,55 +53,17 @@ class MainActivity : AppCompatActivity() {
 
         // True 버튼
         trueButton.setOnClickListener{ view : View ->
-//            var toast = Toast.makeText(
-//                this,
-//                R.string.correct_toast,
-//                Toast.LENGTH_SHORT);
-//            toast.setGravity(Gravity.TOP or Gravity.CENTER_HORIZONTAL, Gravity.CENTER, 550);
-//            toast.show();
             checkAnswer(true);
         }
         
         // False 버튼
         falseButton.setOnClickListener{ view : View ->
-//            var toast = Toast.makeText(
-//                this,
-//                R.string.incorrect_toast,
-//                Toast.LENGTH_SHORT);
-//            toast.setGravity(Gravity.TOP or Gravity.CENTER_HORIZONTAL, Gravity.CENTER, 550);
-//             JAVA 11, API 30 은 setGravity 옵션이 없어 미적용 API 28 이하로 낮추거나 Snakbar 사용 권장
-//            toast.show();
-
-            // Snackbar
-//            var snackbar = Snackbar.make(view, R.string.incorrect_toast, Snackbar.LENGTH_SHORT);
-//            snackbar.setAction("show Toast"){
-//                val toastFalse = Toast.makeText(this, R.string.incorrect_toast, Toast.LENGTH_SHORT);
-//                toastFalse.setGravity(Gravity.TOP, Gravity.CENTER, 550);
-//                toastFalse.show();
-//            }.show()
             checkAnswer(false);
-        }
-
-        // Previous 버튼
-        previousButton.setOnClickListener{
-            currentIndex = if(currentIndex < 1){
-                (questionBank.size - 1);
-            }else{
-                currentIndex - 1
-            }
-            updateQuestion()
         }
 
         // Next 버튼
         nextButton.setOnClickListener{
-            currentIndex = (currentIndex + 1) % questionBank.size
-//            val questionTextResId = questionBank[currentIndex].textResId
-//            questionTextView.setText(questionTextResId)
-            updateQuestion()
-        }
-
-        questionTextView.setOnClickListener{
-            currentIndex = (currentIndex + 1) % questionBank.size
+            quizViewModel.moveToNext()
             updateQuestion()
         }
 
@@ -133,47 +96,17 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun updateQuestion(){
-        val questionTextResId = questionBank[currentIndex].textResId
+        val questionTextResId = quizViewModel.currentQuestionText
         questionTextView.setText(questionTextResId)
     }
 
     // 뷰로 부터 받은 값 확인
     private fun checkAnswer(userAnswer : Boolean){
-        if(questionBank[currentIndex].done){
-            Toast.makeText(this, R.string.done_toast, Toast.LENGTH_SHORT).show()
-            return;
-        }
-
-        var currentAnswer = questionBank[currentIndex].answer
-
-        if (userAnswer == currentAnswer){
-            this.questionBank[currentIndex].done = true;
-            this.questionBank[currentIndex].result = true;
-            issueSeq++;
+        val correctAnswer = quizViewModel.currentQuestionAnswer
+        if (userAnswer == correctAnswer){
             Toast.makeText(this, R.string.correct_toast, Toast.LENGTH_SHORT).show();
         } else {
-            this.questionBank[currentIndex].done = true;
-            this.questionBank[currentIndex].result = false;
-            issueSeq++;
             Toast.makeText(this, R.string.incorrect_toast, Toast.LENGTH_SHORT).show();
         }
-
-        if(issueSeq == questionBank.size){
-            totalScore();
-        }
-    }
-
-    private fun totalScore(){
-        var questionItr = questionBank.iterator();
-        var successSeq = 0;
-
-        while(questionItr.hasNext()){
-            if(questionItr.next().result){
-                successSeq++;
-            }
-        }
-
-        var totalScore = Math.round(((successSeq.toDouble()/questionBank.size)*100))
-        Toast.makeText(this, totalScore.toString()+"점 입니다.", Toast.LENGTH_SHORT).show();
     }
 }
