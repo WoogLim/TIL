@@ -1,5 +1,7 @@
 package com.bignerdranch.android.geoguiz
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -98,6 +100,23 @@ class MainActivity : AppCompatActivity() {
         updateQuestion()
     }
 
+    // 자식 액티비티가 돌려주는 결과 값을 가져오기 위해 onActivityResult()를 오버라이드한다.
+    override fun onActivityResult(requestCode: Int,
+                                  resultCode: Int,
+                                  data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if(resultCode != Activity.RESULT_OK){
+            return
+        }
+
+        if(requestCode == REQUEST_CODE_CHEAT){
+            quizViewModel.isCheater =
+                data?.getBooleanExtra(EXTRA_ANSWER_SHOWN, false) ?: false
+                // data != null ? true : false
+        }
+    }
+
     override fun onStart(){
         super.onStart()
         Log.d(TAG, "onStart() called")
@@ -152,10 +171,17 @@ class MainActivity : AppCompatActivity() {
     // 뷰로 부터 받은 값 확인
     private fun checkAnswer(userAnswer : Boolean){
         val correctAnswer = quizViewModel.currentQuestionAnswer
-        if (userAnswer == correctAnswer){
-            Toast.makeText(this, R.string.correct_toast, Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(this, R.string.incorrect_toast, Toast.LENGTH_SHORT).show();
+//        if (userAnswer == correctAnswer){
+//            Toast.makeText(this, R.string.correct_toast, Toast.LENGTH_SHORT).show();
+//        } else {
+//            Toast.makeText(this, R.string.incorrect_toast, Toast.LENGTH_SHORT).show();
+//        }
+        val messageResId = when {
+            quizViewModel.isCheater -> R.string.judgment_toast
+            userAnswer == correctAnswer -> R.string.correct_toast
+            else -> R.string.incorrect_toast
         }
+
+        Toast.makeText(this, messageResId, Toast.LENGTH_SHORT).show()
     }
 }

@@ -17,7 +17,9 @@ class QuizViewModel : ViewModel() {
     //        Log.d(TAG, "ViewModel instance about to be destroyed")
     //    }
 
-    var currentIndex : Int = 0;
+    var currentIndex = 0;
+
+    var isCheater = false;
 
     var issueSeq = 0;
 

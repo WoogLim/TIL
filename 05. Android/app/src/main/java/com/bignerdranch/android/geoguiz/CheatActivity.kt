@@ -38,12 +38,12 @@ class CheatActivity : AppCompatActivity() {
     }
 
     // setResult로 결과 코드가 등록되면 안드로이드 OS에서 부모 액티비티인 MainActivity에서 다음 함수를 호출한다.
-    // onActivityResult(requestCode: Int, resultCode: Int, data: Intent)
+    // onActivityResult(requestCode: Int, resultCode: Int, data: Intent) 0, true, true
     // 첫 인자는 MainActivity에서 던진 요청 코드, 나머지 인자는 setResult(Int, Intent)
     private fun setAnswerShownResult(isAnswerShown : Boolean){
         val data = Intent().apply{
             putExtra(EXTRA_ANSWER_SHOWN, isAnswerShown)
-        }
+        } // 객체 생성 data{ }
         setResult(Activity.RESULT_OK, data)
     }
 
