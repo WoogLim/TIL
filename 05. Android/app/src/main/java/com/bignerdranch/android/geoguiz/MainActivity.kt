@@ -17,6 +17,9 @@ private const val TAG = "MainActivity"
 // Bundle 객체에 저장될 데이터의 키
 private const val KEY_INDEX = "index"
 
+// 자식 액티비티로 돌려받을 데이터
+private const val REQUEST_CODE_CHEAT = 0
+
 class MainActivity : AppCompatActivity() {
     private lateinit var trueButton : Button
     private lateinit var falseButton : Button
@@ -69,6 +72,12 @@ class MainActivity : AppCompatActivity() {
             checkAnswer(false);
         }
 
+        // Previous 버튼
+        previousButton.setOnClickListener{
+            quizViewModel.moveToPrevious()
+            updateQuestion()
+        }
+
         // Next 버튼
         nextButton.setOnClickListener{
             quizViewModel.moveToNext()
@@ -80,7 +89,10 @@ class MainActivity : AppCompatActivity() {
 //            var intent = Intent(this, CheatActivity::class.java)
             val answerIsTrue = quizViewModel.currentQuestionAnswer
             val intent = CheatActivity.newIntent(this@MainActivity, answerIsTrue)
-            startActivity(intent)
+            // 액티비티 전환을 위해 사용
+//            startActivity(intent)
+            // 자식 액티비티로부터 리턴값을 전달받기 위해 사용
+            startActivityForResult(intent, REQUEST_CODE_CHEAT)
         }
 
         updateQuestion()
