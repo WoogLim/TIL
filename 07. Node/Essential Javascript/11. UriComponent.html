@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+<body>
+    
+
+<script>
+    // AJAX을 보내는 경우 uri가 http://localhost:4000/search/노드 처럼 한글이 들어간느 경우 서버가 이를 이해하지 못하는 경우가 있다.
+    // window 객체의 메서드인 encodeURIComponent 메서드를 사용하자 한글 주소 부분만 encodeURIComponent 메서드로 감싸서 사용한다.
+
+    (async () => {
+        try{
+            const result = await axios.get(`https://www.zerocho.com/api/search/${encodeURIComponent('노드')}`);
+            console.log(result);
+            console.log(result.data);
+        } catch(error){
+            console.log(error);
+        }
+    })();
+
+    // 이를 받는 쪽에서는 decodeURIComponent를 사용하면 된다.
+    decodeURIComponent('변환된 문자열');
+
+    // encodeURIComponent와 decodeURIComponent를 쓰는 경우는 대부분 한글을 처리하는 과정에서 사용한다.
+</script>
+</body>
+</html>

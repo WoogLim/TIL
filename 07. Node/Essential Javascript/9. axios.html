@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+<script>
+    axios.get('https://www.zerocho.com/api/get')
+        .then((result) => {
+            console.log(result);
+            console.log(result.data);
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+    // axios의 경우 내부에 new Promise가 들어있으므로 then과 catch구문을 사용할 수 있다.
+    // Promise 이므로 이도 같이 async/await 방식으로 변경이 가능하다.
+    
+    (async () => {
+        try{
+            const result = await axios.get('https://www.zerocho.com/api/get');
+            console.log(reuslt);
+            console.log(result.data);
+        } catch (error) {
+            console.error(error);
+        }
+    })(); // 바로 실행한다는 의미
+
+    // POST방식의 요청을 보낸다. POST 요청에서는 데이터를 서버로 보낼 수 있다.
+
+    (async() => {
+       try{
+           const result = await axios.post('https://www.zerocho.com/api/post/json', {
+               name: 'zerocho',
+               birth: 1994,
+           });
+           console.log(result);
+           console.log(result.data); // {}
+        } catch (error){
+           console.error(error);
+        }      
+    })
+</script>
+<body>
+    
+</body>
+</html>

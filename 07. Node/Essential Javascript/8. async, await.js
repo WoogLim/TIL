@@ -68,6 +68,7 @@ async function findAndSaveUser(Users) {
 findAndSaveUser().then(() => {
   /* 생략 */
 });
+
 // 또는
 async function other() {
   const result = await findAndSaveUser();
