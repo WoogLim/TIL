@@ -4,9 +4,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.view.GestureDetector;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
     TextView textView;
@@ -44,40 +46,41 @@ public class MainActivity extends AppCompatActivity {
 
         });
 
+        // GestureDetector : 터치 이벤트 중에서 스크롤과 같이 일정 패턴으로 구분되는 이벤트 객체
         detector = new GestureDetector(this, new GestureDetector.OnGestureListener(){
             @Override
             public boolean onDown(MotionEvent motionEvent){
-                println("onDown() 호출됨.");
+                println("onDown() 호출됨."); // 화면이 눌림
                 return true;
             }
 
             @Override
             public void onShowPress(MotionEvent motionEvent){
-                println("onShowPress() 호출됨");
+                println("onShowPress() 호출됨"); // 화면이 눌렀다 떼짐
             }
 
             @Override
             public boolean onSingleTapUp(MotionEvent motionEvent){
-                println("onSingleTapUp() 호출됨");
+                println("onSingleTapUp() 호출됨"); // 화면이 한 손가락으로 눌렸다 떼지는 경우
 
                 return true;
             }
 
             @Override
             public boolean onScroll(MotionEvent motionEvent, MotionEvent motionEvent1, float v, float v1){
-                println(("onScroll 호출됨 : " + v + ", "+ v1));
+                println(("onScroll 호출됨 : " + v + ", "+ v1)); // 화면이 눌린 채 일정한 속도와 방향으로 움직였다 떼는 경우
 
                 return true;
             }
 
             @Override
             public void onLongPress(MotionEvent motionEvent){
-                println("onLongPress() 호출됨.");
+                println("onLongPress() 호출됨."); // 화면을 손가락으로 오래 누르는 경우
             }
 
             @Override
             public boolean onFling(MotionEvent motionEvent, MotionEvent motionEvent1, float v, float v1){
-                println("onFling() 호출됨 : " + v + ", " + v1);
+                println("onFling() 호출됨 : " + v + ", " + v1); // 화면이 눌린 채 가속도를 붙여 손가락을 움직였다 떼는 경우
 
                 return true;
             }
@@ -95,10 +98,20 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        
-
     }
     public void println(String data){
         textView.append(data + "\n");
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event){
+
+        if(keyCode == KeyEvent.KEYCODE_BACK){
+            Toast.makeText(this, "시스템 [BACK] 버튼이 눌렸습니다.", Toast.LENGTH_LONG).show();
+
+            return true;
+        }
+
+        return true;
     }
 }
