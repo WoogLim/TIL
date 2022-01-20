@@ -16,6 +16,7 @@ public class SimpleData implements Parcelable {
     }
 
     // SimpleData 생성자는 Parcel을 파라미터로 받는다. 아래 메서드를 이용해 데이터를 읽어들인다.
+    // 외부에서 클래스 생성시 사용. 아래 CREATOR가 사용하는 생성자
     public SimpleData(Parcel src){
         // Parcel 객체에서 읽기
         number = src.readInt();

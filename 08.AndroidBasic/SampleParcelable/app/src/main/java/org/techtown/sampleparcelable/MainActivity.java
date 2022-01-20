@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), MenuActivity.class);
                 SimpleData data = new SimpleData(100, "Hello Android!"); // SimpleData 객체 생성
-                intent.putExtra(KEY_SIMPLE_DATA, data); // 인텐트에 부가 데이터로 넣기 SimpleData를 MenuActivity에서 사용할 수 있도록 해준다.
+                intent.putExtra(KEY_SIMPLE_DATA, data); // 인텐트에 부가 데이터로 넣기 Parcelable을 구현한 SimpleData객체를 MenuActivity에서 사용할 수 있도록 해준다.
                 startActivityForResult(intent, REQUEST_CODE_MENU);
             }
         });
