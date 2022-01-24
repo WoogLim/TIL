@@ -10,12 +10,12 @@
         android:id="@+id/textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="메인 프래그먼트"
+        android:text="메뉴 프래그먼트"
         android:textSize="30sp" />
 
     <Button
         android:id="@+id/button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="메뉴화면으로" />
+        android:text="메인화면으로" />
 </LinearLayout>
