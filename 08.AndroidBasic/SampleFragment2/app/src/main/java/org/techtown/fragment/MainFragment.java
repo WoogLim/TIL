@@ -10,6 +10,26 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 public class MainFragment extends Fragment {
+//  onCreateView는 뷰가 그려지는 시점에 호출된다. onCreate와 같다고 보면됨.
+    // Fragment의 수명주기 (화면에 보일때)
+    /* onAttach > onCreate > onCreateView > onActivityCreated > onStart > onResume 순으로 실행되므로 액티비티 설정관련부분은 onAttach에서 적용해야한다.
+    * 액티비티가 메모리에 처음 만들어지면 onCreate 메서드가 호출되지만 프래그먼트는 onActivityCreated가 호출된다.
+    * onAttach(Activity) : 프래그먼트가 액티비와 연결될 때 호출됨
+    * onCreate(Bundle) : 프래그먼트가 초기활 될때 호출됨(new 로 객체를 만드는 시점이 아님.)
+    * onCreateView(LayoutInflater, ViewGroup, Bundle) : 프래그먼트와 관련된 뷰 계층을 만들어 리턴. 뷰가 그려지는 시점에 호출되며 뷰의 계층구조를 구성하는 시점에 호출된다.
+    * onActivityCreated(Bundle) : 프래그먼트와 연결된 엑티비티가 onCreate 메서드의 작업을 완료했을 때 호출
+    * onStart() : 프래그먼트와 연결된 엑티비티가 onStart되어 사용자에게 프래그먼트가 보여질 때 호출
+    * onResume() : 프래그먼트와 연결된 엑티비티가 onResume되어 사용자와 상호작용할 수 있을때 호출
+    * */
+
+    // Fragment의 수명주기 (화면에 보이지 않을때)
+    /* onPause > onStop > onDestroyView(Baskstack에서 복구되는 경우 onCreateView 호출) > onDestroy > onDetach
+    *  onPause() : 프래그먼트와 연결된 액티비티가 onPause되어 사용자와 상호작용을 중지할 때 호출
+    *  onStop() : 프래그먼트와 연결된 액티비티가 onStop되어 화면에서 더 이상 보이지 않을 때나 프래그먼트의 기능이 중지되었을때 호출
+    *  onDestroyView() : 프래그먼트와 관련된 뷰 리소스를 해제할 수 있도록 호출
+    *  onDestroy() : 프래그먼트의 상태를 마지막으로 정리할 수 있도록 호출
+    *  onDetach() : 프래그먼트가 액티비티와 연결을 끊기 직전 호출됨
+    * */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 

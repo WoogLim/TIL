@@ -20,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
         // 프래그먼트는 뷰가 아니여서 Activity클래스에 있는 findViewById로 검색할 수 없다. findFragmentById를 통해 검색한다.
         mainFragment = (MainFragment) getSupportFragmentManager().findFragmentById(R.id.mainFragment);
         // 메뉴 프래그먼트는 새로운 객체로 만들어 변수에 할당한다.
-        menuFragment = new MenuFragment();
+        menuFragment = new MenuFragment(); // 객체를 만들더라도 액티비티 위에 연결을해야 프래그먼트가 동작한다.
     }
 
     public void onFragmentChanged(int index){
