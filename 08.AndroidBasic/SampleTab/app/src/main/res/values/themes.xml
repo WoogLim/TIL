@@ -1,0 +1,19 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <!-- 액션바 없애기 . style 태그의 parent 속성의 값으로 API에서 미리 정의한 테마 중 하나가 선택된다. 이 테마는 매니페스트 파일에서 application 또는 activity
+         태그에 지정되어 액티비티의 테마로 결정된다.
+         Theme.MaterialComponents.DayNight.DarkActionBar -> Theme.MaterialComponents.DayNight.NoActionBar 로 수정한다. -->
+    <style name="Theme.SampleTab" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/purple_500</item>
+        <item name="colorPrimaryVariant">@color/purple_700</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/teal_200</item>
+        <item name="colorSecondaryVariant">@color/teal_700</item>
+        <item name="colorOnSecondary">@color/black</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+        <!-- Customize your theme here. -->
+    </style>
+</resources>
