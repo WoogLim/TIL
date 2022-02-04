@@ -5,11 +5,12 @@
       <map>
         <entry key="..\:/dev/git/TIL/08.AndroidBasic/SampleRecyclerView/app/src/main/res/layout/activity_main.xml" value="0.23854166666666668" />
         <entry key="..\:/dev/git/TIL/08.AndroidBasic/SampleRecyclerView/app/src/main/res/layout/person_item.xml" value="0.23854166666666668" />
+        <entry key="..\:/dev/git/TIL/08.AndroidBasic/SampleRecyclerView2/app/src/main/res/layout/activity_main.xml" value="0.23854166666666668" />
         <entry key="..\:/lim/TIL/08.AndroidBasic/SampleRecyclerView/app/src/main/res/layout/activity_main.xml" value="0.3120471014492754" />
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">
