@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<set xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+
+    <!--  duration 지속시간 설정
+          1.0 > 원래 크기 2.0 > 2.0배 늚
+    -->
+    <scale
+        android:duration="2500"
+        android:pivotX="50%"
+        android:pivotY="50%"
+        android:fromXScale="1.0"
+        android:fromYScale="1.0"
+        android:toXScale="2.0"
+        android:toYScale="2.0"
+        />
+
+    <!--  startOffset 시작시간 설정
+          1.0 > 원래 크기 0.5 > 0.5배 줄어듦
+    -->
+
+    <scale
+        android:startOffset="2500"
+        android:duration="2500"
+        android:pivotX="50%"
+        android:pivotY="50%"
+        android:fromXScale="1.0"
+        android:fromYScale="1.0"
+        android:toXScale="0.5"
+        android:toYScale="0.5"
+        />
+</set>

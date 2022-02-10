@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<set xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- 투명도 애니메이션
+    완전 투명(0.0) 선명이 보이는 뷰(1.0)으로 10초간 변경 -->
+    <alpha
+        android:fromAlpha="0.0"
+        android:toAlpha="1.0"
+        android:duration="10000"
+    />
+</set>

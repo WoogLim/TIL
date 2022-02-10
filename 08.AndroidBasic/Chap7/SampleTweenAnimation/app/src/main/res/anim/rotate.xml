@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<set xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- 회전 애니메이션
+    0도에서 360도(시계방향)으로 현재 뷰 객체의 중간 지점(50% 퍼센트비율)을 기준으로 10초동안 회전
+    -->
+    <rotate
+        android:fromDegrees="0"
+        android:toDegrees="360"
+        android:pivotX="50%"
+        android:pivotY="50%"
+        android:duration="10000"
+    />
+</set>

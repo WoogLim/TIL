@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<set xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--
+    이동 액션
+
+    현재 x좌표에서 대상의 크기만큼(100%p) 왼쪽으로 이동 20초간 repeatCount가 -1 이므로 무한 반복한다. 애니메이션
+    이 끝난 후에 대상이 원래 위치로 돌아오는것을 막기 위해 fillAfter 속성을 true로 설정 -->
+
+    <translate
+        android:fromXDelta="0%p"
+        android:toXDelta="-100%p"
+        android:duration="20000"
+        android:repeatCount="-1"
+        android:fillAfter="true"
+    />
+</set>

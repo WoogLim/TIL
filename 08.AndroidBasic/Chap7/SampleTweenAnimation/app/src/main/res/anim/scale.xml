@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<set xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <!--
+        set 태그로 여러 애니메이션을 지정할 수 있다.
+        애니메이션은 동시에 수행되거나 시작시간에 의해 순서대로 작동한다.
+        지속시간 :  android:duration="2500" 2.5초
+        크기를 변경하는 축의 정보
+        android:pivotX="50%"
+        android:pivotY="50%"
+        시작 배율
+        android:fromXScale="1.0"
+        android:fromYScale="1.0"
+        끝 배율
+        android:toXScale="2.0"
+        android:toYScale="2.0"
+    -->
+
+    <scale
+        android:duration="2500"
+        android:pivotX="50%"
+        android:pivotY="50%"
+        android:fromXScale="1.0"
+        android:fromYScale="1.0"
+        android:toXScale="2.0"
+        android:toYScale="2.0"
+    />
+</set>
