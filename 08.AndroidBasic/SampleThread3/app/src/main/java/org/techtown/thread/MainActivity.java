@@ -26,7 +26,10 @@ import android.widget.Toast;
 public class MainActivity extends AppCompatActivity {
     TextView textView;
 
-    MainHandler handler;
+//    MainHandler handler;
+    // API의 기본 핸들러 설정하기
+    Handler handler = new Handler();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,8 +45,6 @@ public class MainActivity extends AppCompatActivity {
                 thread.start();
             }
         });
-
-        handler = new MainHandler();
     }
 
     // 기본 접근 같은 클래스, 패키지 이용
@@ -64,13 +65,26 @@ public class MainActivity extends AppCompatActivity {
                 // textView.setText("value 값 : " + value);
 
                 // 핸들러가 관리하는 메시지 큐에서 처리할 수 있는 메시지 객체를 반환받는다.
-                Message message = handler.obtainMessage();
-                Bundle bundle = new Bundle();
-                bundle.putInt("value", value);
-                message.setData(bundle);
+//                Message message = handler.obtainMessage();
+//                Bundle bundle = new Bundle();
+//                bundle.putInt("value", value);
+//                message.setData(bundle);
 
                 // 셋팅한 메시지 객체를 핸들러로 보낸다.
-                handler.sendMessage(message);
+//                handler.sendMessage(message);
+
+                // 핸들러의 post 메서드 호출하기
+                // 핸들러 객체를 만들어 변수에 할당하면 이 객체의 post메서드를 호출한다.
+                // 여러 스레드 안에서 텍스트뷰에 표시하려면 new 연산자로 Runnable 객체를 만들어 각 스레드에서 처리한다.
+                // 스레드 관련 처리는 Thread 를 상속하는 클래스에서 핸들러로 수행한다. 메인스레드 아래에서 수행되기 때문에 UI 접근이 가능하다.
+
+                // 핸들러 객체를 만들지 않고 사용하는 방법으로 runOnUiThread(new Runnable(){}) 를 사용하기도 한다. run 메서드 안에 뷰를 접근하는 코드를 넣어 메인스레드에서 동작하게한다.
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        textView.setText("value 값 : " + value);
+                    }
+                });
             }
         }
     }
@@ -84,16 +98,17 @@ public class MainActivity extends AppCompatActivity {
      * 이 메시지 객체에 필요한 정보를 넣은 후 sendMessage 메서드를 이용해 메시지 큐에 넣을 수 있다. 메시지 큐에 들어간 메시지는 순서대로 핸들러가 처리하게 되며
      * 이때 handleMessage 메서드에 정의한 기능이 수행된다. 이때 handleMessage에 들어 있는 코드가 수행되는 위치는 새로 만든 스레드가 아닌 메인 스레드이다.
      * */
-    class MainHandler extends Handler {
-
-        // 핸들러 안에서 전달받은 메시지 객체 처리하기
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-
-            Bundle bundle = msg.getData();
-            int value = bundle.getInt("value");
-            textView.setText("value 값 : " + value);
-        }
-    }
+//    class MainHandler extends Handler {
+//
+//        // 핸들러 안에서 전달받은 메시지 객체 처리하기
+          // Handler를 상속받아 handleMessage를 재정의해 핸들러에서 처리할 기능을 정의한다.
+//        @Override
+//        public void handleMessage(Message msg) {
+//            super.handleMessage(msg);
+//
+//            Bundle bundle = msg.getData();
+//            int value = bundle.getInt("value");
+//            textView.setText("value 값 : " + value);
+//        }
+//    }
 }
