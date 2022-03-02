@@ -15,10 +15,12 @@ public class CustomViewStyle extends View {
 
     public CustomViewStyle(Context context) {
         super(context);
+        init();
     }
 
     public CustomViewStyle(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
+        init();
     }
 
     private void init(){
@@ -62,6 +64,17 @@ public class CustomViewStyle extends View {
         paint.setAntiAlias(true);
         canvas.drawCircle(160, 160, 40, paint);
 
-        paint.setStyle();
+        // 첫 번째 텍스트를 Stroke 스타일로 설정
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setStrokeWidth(1);
+        paint.setColor(Color.MAGENTA);
+        paint.setTextSize(30);
+        canvas.drawText("Text (Stroke)", 20, 260, paint);
+
+        // 두 번째 스타일을 FILL 설정
+        paint.setStyle(Paint.Style.FILL);
+        paint.setTextSize(30);
+        canvas.drawText("Text", 20, 320, paint);
+
     }
 }

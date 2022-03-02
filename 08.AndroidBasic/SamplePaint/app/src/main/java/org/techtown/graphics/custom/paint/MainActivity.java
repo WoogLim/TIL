@@ -1,4 +1,4 @@
-package org.techtown.graphics.custom.style;
+package org.techtown.graphics.custom.paint;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -11,7 +11,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        CustomViewStyle customViewStyle = new CustomViewStyle(this);
-        setContentView(customViewStyle);
+        PaintBoard view = new PaintBoard(this);
+        setContentView(view);
     }
 }
