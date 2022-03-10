@@ -40,6 +40,7 @@ list_a.insert(0, 10) # 0번째 인덱스에 10 요소 추가
 print(list_a)
 
 # 한번의 여러 오소 추가
+print("# 한번의 여러 오소 추가")
 list_a = [1, 2, 3]
 list_a.extend([4, 5, 6])
 print(list_a)
