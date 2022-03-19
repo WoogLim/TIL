@@ -1,0 +1,2 @@
+com/bignerdranch/android/geoguiz/BuildConfig.java
+ com.bignerdranch.android.geoguiz.BuildConfig
