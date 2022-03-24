@@ -100,3 +100,30 @@ print("# 딕셔너리의 items() 함수와 반복문 조합하기")
 for key, element in example_dictionary.items():
     print("dictionary[{}] = {}".format(key, element))
     
+print("\n# 리스트 내포")
+# 반복문을 사용해 리스트를 재조합 하는 경우
+
+# 변수 선언
+array = []
+
+# 반복문 적용
+for i in range(0, 20, 2):
+    array.append(i*i)
+    
+print(array)
+
+# 위와 같은 재조합은 한 줄로 작성이 가능하다.
+
+# 리스트 선언. 최종 결과(i * i)를 앞에 작성한다. 이를 리스트 내포라고 부른다.
+array = [i * i for i in range(0, 20, 2)] 
+# 리스트 이름 = [ 표현식 for 반복자 in 반복할 수 있는 것]
+print(array)
+
+print("\n# 조건을 활용한 리스트 내포")
+array = ["사과", "자두", "초콜릿", "바나나", "체리"]
+# array의 요소를 fruit라고 할 때 초콜릿이 아닌 fruit로 재조합 해달라는 의미
+output = [fruit for fruit in array if fruit !="초콜릿"]
+# 리스트 이름 = [ 표현식 for 반복자 in 반복할 수 있는 것 if 조건문]
+
+# 출력합니다
+print(output)
