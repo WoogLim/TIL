@@ -73,10 +73,40 @@ import time
 # 변수를 선언헌다.
 number = 0
 
-# 5초 동안 반복 - 시간을 기반으로 조건을 거는 경우 while반복문을 활용한다.
+# 5초 동안 반복 - 시간을 기반으로 조건을 거는 경우 while반복문을 활용한다. 주로 통신시 사용한다.
 target_tick = time.time() + 5
 while time.time() < target_tick:
     number += 1
     
 # 출력합니다.
 print("5초 동안 {}번 반복했습니다.".format(number))
+
+print("\n2-3. break/continue 키워드")
+
+# 1. break
+# 변수 선언
+i = 0
+
+# 무한 반복
+while True:
+    # 몇 번째 반복인지 출력
+    print("{}번째 반복문입니다.".format(i))
+    i = i + 1
+    # 반복을 종료합니다.
+    input_text = input("> 종료하시겠습니까?(Y/N): ")
+    if input_text in ["Y", "y"]:
+        print("반복을 종료합니다.")
+        break
+    
+# 2. continue
+# 변수 선언
+numbers = [5, 15, 6, 20, 7, 25]
+
+# 반복을 돌린다.
+for number in numbers:
+    # number가 10보다 작으면 다음 반복으로 넘어감
+    # continue를 사용하므로 해당 if문에서만 반복됨
+    if number < 10:
+        continue
+    # 출력한다.
+    print(number)
