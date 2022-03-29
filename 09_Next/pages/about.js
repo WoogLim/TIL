@@ -5,9 +5,6 @@ function HomePage() {
   console.log("[AboutPage] render");
   return (
     <>
-      <header>
-        <NavBar />
-      </header>
       <main>
         <h1>About</h1>
       </main>
