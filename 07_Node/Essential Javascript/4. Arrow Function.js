@@ -9,6 +9,8 @@ const add2 = (x, y) => {
 
 const add3 = (x, y) => x + y;
 
+const multiply = number => number *2; // return
+
 // this 바인드 방식
 
 var relationship1 = {

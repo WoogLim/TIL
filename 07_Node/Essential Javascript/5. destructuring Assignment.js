@@ -48,3 +48,4 @@ var bool = array[3];
 
 const array = ["node.js", {}, 10, true];
 const [node, obj, , bool] = array;
+console.log(array);
